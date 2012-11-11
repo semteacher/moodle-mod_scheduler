@@ -53,6 +53,12 @@ class mod_scheduler_mod_form extends moodleform_mod {
 	    $mform->setType('defaultslotduration', PARAM_INT);
 	    $mform->addHelpButton('defaultslotduration', 'defaultslotduration', 'scheduler');
         $mform->setDefault('defaultslotduration', 15);
+        
+        $yesno[0] = get_string('no');
+        $yesno[1] = get_string('yes');		
+        $mform->addElement('select', 'allowmulticourseappointment', get_string('multicoursesteacherappointment', 'scheduler'), $yesno);
+        $mform->setHelpButton('allowmulticourseappointment', array('multicoursesappointment', get_string('multicoursesteacherappointment', 'scheduler'), 'scheduler'));
+        $mform->setDefault('allowmulticourseappointment', 0);        
 
         $mform->addElement('modgrade', 'scale', get_string('grade'));
         $mform->setDefault('scale', 0);
@@ -63,8 +69,6 @@ class mod_scheduler_mod_form extends moodleform_mod {
 	    $mform->addHelpButton('gradingstrategy', 'gradingstrategy', 'scheduler');
         $mform->disabledIf('gradingstrategy', 'scale', 'eq', 0);
 
-        $yesno[0] = get_string('no');
-        $yesno[1] = get_string('yes');
 	    $mform->addElement('select', 'allownotifications', get_string('notifications', 'scheduler'), $yesno);
 	    $mform->addHelpButton('allownotifications', 'notifications', 'scheduler');
 

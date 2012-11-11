@@ -151,6 +151,8 @@ $string['monday'] = 'Monday';
 $string['move'] = 'Change';
 $string['moveslot'] = 'Move slot';
 $string['multiplestudents'] = 'Allow multiple students per slot?';
+$string['multicoursesteacherappointment'] = 'Appointments within multiple courses';//@TDMU
+$string['multicoursesappointmentoverlap'] = 'Erorr! You can not appoint to this slot because already have an another course appointed:';//@TDMU
 $string['myappointments'] = 'My appointments';
 $string['name'] = 'Scheduler name';
 $string['needteachers'] = 'Slots cannot be added as this course has no teachers';
@@ -309,6 +311,17 @@ In that case, only "clean" slots will be added. Conflicting will be ignored.</p>
 deleting previous slots before the procedure can add new slots.</p>';
 
 $string['location_help']='Specify the scheduled location of the meeting.';
+
+$string['multicoursesappointment'] = 'Setting appointments slots overlapping within multiple courses';
+$string['multicoursesappointment_help']='
+<p>Teacher can customize a slot overlapping behaviour mode :</p>
+<p><ul>
+<li><b>"No" - default setting: </b>Slots overlapping never allowed. 
+</li>
+<li><b>"Yes": </b> Slots overlapping are allowed only if overlapped slots are appointed in the scheduler models that are related to the different courses. Teacher can create overlapped slots in different courses. This mode is useful when teacher want to create schedule of the students missed class. <b>Note.</b> Existing exclusive or limited slots still has not been overlapped never. 
+</li>
+</ul>
+</p>';
 
 $string['notifications_help']='When this option is enabled, teachers and students will receive notifications when appointments are applied for or cancelled.';
 

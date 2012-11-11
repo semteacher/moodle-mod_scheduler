@@ -106,7 +106,10 @@ function scheduler_get_conflicts($schedulerid, $starttime, $endtime, $teacher=0,
     }
     $teacherScope = ($teacher != 0) ? "s.teacherid = {$teacher} AND " : '' ;
     $studentJoin = ($student != 0) ? "JOIN {scheduler_appointment} a ON a.slotid = s.id AND a.studentid = {$student} " : '' ;
-    $exclusiveClause = ($careexclusive) ? "exclusivity != 0 AND " : '' ;
+    //$exclusiveClause = ($careexclusive) ? "exclusivity != 0 AND " : '' ;
+    //TDMU - consider exclusivity just for a personal appoinments 
+    $exclusiveClause = ($careexclusive) ? "exclusivity = 1 AND " : '' ;
+    
 	$timeClause = "( (s.starttime <= {$starttime} AND s.starttime + s.duration * 60 > {$starttime}) OR ".
         		  "  (s.starttime < {$endtime} AND s.starttime + s.duration * 60 >= {$endtime}) OR ".
         		  "  (s.starttime >= {$starttime} AND s.starttime + s.duration * 60 <= {$endtime}) ) ";

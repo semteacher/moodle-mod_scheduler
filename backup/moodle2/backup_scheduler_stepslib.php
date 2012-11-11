@@ -25,7 +25,7 @@ class backup_scheduler_activity_structure_step extends backup_activity_structure
         // Define each element separated
         $scheduler = new backup_nested_element('scheduler', array('id'), array(
             'name', 'intro', 'introformat', 'schedulermode',
-            'reuseguardtime', 'defaultslotduration', 'allownotifications', 'staffrolename',
+            'reuseguardtime', 'defaultslotduration', 'allowmulticourseappointment', 'allownotifications', 'staffrolename',
             'teacher', 'scale', 'gradingstrategy', 'timemodified'));
 
         $slots = new backup_nested_element('slots');
