@@ -82,6 +82,44 @@ function get_session_data(&$form){
     $form->displayfrom = required_param('displayfrom', PARAM_CLEAN);
 }
 
+/**
+*
+*/
+function get_aperiod_session_data(&$form){
+	$listdatestxt = required_param('listdates', PARAM_TEXT);//string var.
+	$form->listdates = explode(",",$listdatestxt);			//array of string dates
+	
+    if (!$form->rangestart = optional_param('rangestart', '', PARAM_INT)){    
+        $year = date("Y", strtotime($form->listdates[0]));
+        $month = date("m", strtotime($form->listdates[0]));
+        $day = date("d", strtotime($form->listdates[0]));
+        $form->rangestart = make_timestamp($year, $month, $day);//first date in the list
+        $form->starthour = required_param('starthour', PARAM_INT);
+        $form->startminute = required_param('startminute', PARAM_INT);
+        $form->timestart = make_timestamp($year, $month, $day, $form->starthour, $form->startminute);//first date/time in the list
+    }
+    if (!$form->rangeend = optional_param('rangeend', '', PARAM_INT)){    
+        $year = date("Y", strtotime($form->listdates[(count($form->listdates)-1)]));
+        $month = date("m", strtotime($form->listdates[(count($form->listdates)-1)]));
+        $day = date("d", strtotime($form->listdates[(count($form->listdates)-1)]));
+        $form->rangeend = make_timestamp($year, $month, $day);//last date in the list
+        $form->endhour = required_param('endhour', PARAM_INT);
+        $form->endminute = required_param('endminute', PARAM_INT);
+        $form->timeend = make_timestamp($year, $month, $day, $form->endhour, $form->endminute);//last date/time in the list
+    }
+	
+    $form->forcewhenoverlap = required_param('forcewhenoverlap', PARAM_INT);
+    $form->exclusivity = required_param('exclusivity', PARAM_INT);
+    $form->reuse = required_param('reuse', PARAM_INT);
+    $form->divide = optional_param('divide', 0, PARAM_INT);
+    $form->duration = optional_param('duration', $scheduler->defaultslotduration, PARAM_INT);
+    // if no teacher specified, the current user (who edits the slot) is assumed to be the teacher
+    $form->teacherid = optional_param('teacherid', $USER->id, PARAM_INT);
+    $form->appointmentlocation = optional_param('appointmentlocation', '', PARAM_CLEAN);
+    $form->emailfrom = required_param('emailfrom', PARAM_CLEAN);
+    $form->displayfrom = required_param('displayfrom', PARAM_CLEAN);
+		
+}
 // load group restrictions
 $modinfo = get_fast_modinfo($course);
 
@@ -238,6 +276,45 @@ if ($action == 'addsession') {
     echo $OUTPUT->heading(get_string('addsession', 'scheduler'));
     echo $OUTPUT->box_start('center', '', '');
     include_once('addslotsform.html');
+    echo $OUTPUT->box_end();
+    echo '<br />';
+    
+    // return code for include
+    return -1;
+}
+/******************************** Add aperiodic session multiple slots form ******************************/
+if ($action == 'addaperiodsession') {
+    // if there is some error from controller, display it
+    if (!empty($errors)){
+        $errorstr = '';
+        foreach($errors as $anError){
+            $errorstr .= $anError->message;
+        }
+        echo $OUTPUT->box($errorstr, 'errorbox');
+    }
+    
+    $form = new stdClass();
+    if (!empty($errors)){
+        get_aperiod_session_data($data);
+        $form = &$data;
+    } else {
+        $form->rangestart = time();
+        $form->rangeend = time();
+        $form->timestart = time();
+		//time end propouse time interval with length 5 minutes more than default duration - guarantee for one slot
+        $form->timeend = time() + ($scheduler->defaultslotduration+5)*60;
+        $form->hideuntil = $scheduler->timemodified;
+        $form->duration = $scheduler->defaultslotduration;
+        $form->forcewhenoverlap = 0;
+        $form->teacherid = $USER->id;
+        $form->exclusivity = 1;
+        //$form->duration = $scheduler->defaultslotduration;
+        $form->reuse = 1;
+    }
+
+    echo $OUTPUT->heading(get_string('addaperiodsession', 'scheduler'));
+    echo $OUTPUT->box_start('center', '', '');    
+    include_once('addaperiodslotsform.html');
     echo $OUTPUT->box_end();
     echo '<br />';
     
@@ -560,6 +637,7 @@ if ($slots){
 }
 
 $straddsession = get_string('addsession', 'scheduler');
+$straddaperiodsession = get_string('addaperiodsession', 'scheduler');
 $straddsingleslot = get_string('addsingleslot', 'scheduler');
 $strdownloadexcel = get_string('downloadexcel', 'scheduler');
 
