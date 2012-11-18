@@ -51,6 +51,7 @@ $sql = "
     a.attended,
     a.appointmentnote,
     a.grade,
+    a.studentteachernotes,
     a.timemodified as apptimemodified
     FROM
     {scheduler_slots} s,
@@ -79,8 +80,8 @@ if ($slots = $DB->get_records_sql($sql, array($scheduler->id, $studentid, $order
         $table->width = '80%';
     } else {
         echo $OUTPUT->heading(get_string('comments' ,'scheduler'));
-        $table->head  = array (get_string('studentcomments', 'scheduler'), get_string('comments', 'scheduler'), $straction);
-        $table->align = array ('LEFT', 'LEFT');
+        $table->head  = array (get_string('teachernote', 'scheduler'), get_string('studentcomments', 'scheduler'), get_string('comments', 'scheduler'), $straction);
+        $table->align = array ('LEFT', 'LEFT', 'LEFT');
         $table->width = '80%';
     }
     foreach($slots as $slot) {
@@ -139,7 +140,7 @@ if ($slots = $DB->get_records_sql($sql, array($scheduler->id, $studentid, $order
             }
             $commenteditor .= $distributecheck;
             $commenteditor .= "</form>";
-            $table->data[] = array ($slot->notes.'<br/><font size=-2>'.$startdate.' '.$starttime.' to '.$endtime.'</font>', $commenteditor, $actions);
+            $table->data[] = array ($slot->notes.'<br/><font size=-2>'.$startdate.' '.$starttime.' to '.$endtime.'</font>', format_string($slot->studentteachernotes), $commenteditor, $actions);
         }
     }
     // print slots table

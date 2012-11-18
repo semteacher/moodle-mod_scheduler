@@ -149,6 +149,32 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         // savepoint reached
         upgrade_mod_savepoint(true, 2012110700, 'scheduler');
     }
+
+    if ($oldversion < 2012111500) {
+    
+        $dbman = $DB->get_manager();
+        
+        /// Define field studentnotesrequired to be added to scheduler table  
+        $table = new xmldb_table('scheduler');  
+        $field = new xmldb_field('studentnotesrequired', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'allowmulticourseappointment');
+        //$field->setAttributes(XMLDB_TYPE_INTEGER, '4', false, XMLDB_NOTNULL, false, false, null, 0, 'allowmulticourseappointment');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        //$result = $result && add_field($table, $field);
+
+        /// Define field studentteachernotes to be added to scheduler_appointment table  
+        $table = new xmldb_table('scheduler_appointment');  
+        $field = new xmldb_field('studentteachernotes', XMLDB_TYPE_TEXT, 'small', null, null, null, null, 'timemodified');
+        //$field->setAttributes(XMLDB_TYPE_TEXT, 'small', null, null, null, null, null, null, 'timemodified');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }       
+        //$result = $result && add_field($table, $field);
+        // savepoint reached
+        upgrade_mod_savepoint(true, 2012111500, 'scheduler');
+        
+    }
     
     return true;
 }

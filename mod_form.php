@@ -58,7 +58,11 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $yesno[1] = get_string('yes');		
         $mform->addElement('select', 'allowmulticourseappointment', get_string('multicoursesteacherappointment', 'scheduler'), $yesno);
         $mform->setHelpButton('allowmulticourseappointment', array('multicoursesappointment', get_string('multicoursesteacherappointment', 'scheduler'), 'scheduler'));
-        $mform->setDefault('allowmulticourseappointment', 0);        
+        $mform->setDefault('allowmulticourseappointment', 0);
+        
+        $mform->addElement('select', 'studentnotesrequired', get_string('studentnotesrequiredopt', 'scheduler'), $yesno);
+        $mform->addHelpButton('studentnotesrequired', 'studentnotesrequired', 'scheduler');
+        $mform->setDefault('studentnotesrequired', 0);
 
         $mform->addElement('modgrade', 'scale', get_string('grade'));
         $mform->setDefault('scale', 0);

@@ -113,6 +113,8 @@ $string['forcewhenoverlap'] = 'Force when overlap';
 $string['forcourses'] = 'Choose students in courses';
 $string['friday'] = 'Friday';
 $string['generalconfig'] = 'General configuration';
+$string['getstudentsnotes'] = 'Reason for an appointment required:'; // @TDMU
+$string['getstudentsnoteserr'] = '<b>Notes are required!<b> Changes has not been saved. Please try again!'; // @TDMU
 $string['gradingstrategy'] = 'Grading strategy';
 $string['gradingstrategy_help'] = 'In a scheduler where students can have several appointments, select how grades are aggregated. '.
     'The gradebook can show either <ul><li>the mean grade or</li><li>the maximum grade</li></ul> that the student has achieved.';
@@ -153,8 +155,9 @@ $string['move'] = 'Change';
 $string['moveslot'] = 'Move slot';
 $string['multiplestudents'] = 'Allow multiple students per slot?';
 $string['multicoursesteacherappointment'] = 'Appointments within multiple courses';//@TDMU
-$string['multicoursesappointmentoverlap'] = 'Erorr! You can not appoint to this slot because already have an another course appointed:';//@TDMU
+$string['multicoursesappointmentoverlap'] = '<b>Erorr!<b> You can not appoint to this slot because already have an another course appointed:';//@TDMU
 $string['myappointments'] = 'My appointments';
+$string['mynote'] = 'My note';// @TDMU
 $string['name'] = 'Scheduler name';
 $string['needteachers'] = 'Slots cannot be added as this course has no teachers';
 $string['negativerange'] = 'Range is negative. This can\'t be.';
@@ -241,6 +244,7 @@ $string['studentnotes'] = 'Your notes about the appointment ';
 $string['students'] = 'Students';
 $string['sunday'] = 'Sunday';
 $string['teacher'] = 'Teacher';
+$string['teachernote'] = 'Teacher notes'; // @TDMU
 $string['thursday'] = 'Thursday';
 $string['tuesday'] = 'Tuesday';
 $string['unattended'] = 'Unattended';
@@ -313,10 +317,9 @@ deleting previous slots before the procedure can add new slots.</p>';
 
 $string['location_help']='Specify the scheduled location of the meeting.';
 
-$string['multicoursesappointment'] = 'Setting appointments slots overlapping within multiple courses';
+$string['multicoursesappointment'] = 'Setting appointments slots overlapping within multiple courses';// @TDMU
 $string['multicoursesappointment_help']='
 <p>Teacher can customize a slot overlapping behaviour mode :</p>
-<p>
 <ul>
 <li>
 <b>"No" - default setting: </b>Slots overlapping never allowed. 
@@ -324,8 +327,7 @@ $string['multicoursesappointment_help']='
 <li>
 <b>"Yes": </b> Slots overlapping are allowed. Limitation: teacher can create overlapped slots just within different courses. This mode is useful when teacher want to create schedule of the reworks of the students missed clases. <b>Note.</b> Existing exclusive or limited slots still has not been overlapped never.
 </li>
-</ul>
-</p>';
+</ul>';
 
 $string['notifications_help']='When this option is enabled, teachers and students will receive notifications when appointments are applied for or cancelled.';
 
@@ -340,9 +342,20 @@ $string['reuseguardtime_help']='
 <p>When a slot is declared as volatile (not reusable), it will be automatically deleted when a student changes is appointment assignation, feeing completely the slot, or when a teacher revokes all appointments on it. The deletion takes place when the slot starts too close to the actual date.</p>
 <p>The parameter specifies the delay, from "now on", under which a freed slot will be deleted and will not be available for further appointments.</p>';
 
-$string['staffrolename_help']='
+$string['staffrolename_help']=' 
 The label for the role who attends students. This is not necessarily a "teacher".';
 
+$string['studentnotesrequired']='Setting a student notes requirements';// @TDMU
+$string['studentnotesrequired_help']='
+<p>Teacher can customize a student notes requirements mode:</p>
+<ul>
+<li>
+<b>"No" - default setting:</b> There are did not reqiured students notes on appointmet.
+</li>
+<li>
+<b>"Yes": </b> Students will not be able to appoint without an appointment notes (reasons) input.
+</li>
+</ul>';
 
 /* ***********  E-mail templates from here on ************ */
 

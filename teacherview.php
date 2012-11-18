@@ -662,13 +662,13 @@ if ($slots){
     // prepare slots table
     $table = new html_table();
     if ($page == 'myappointments'){
-        $table->head  = array ('', $strdate, $strstart, $strend, $strstudents, $straction);
+        $table->head  = array ('', $strdate, $strstart, $strend, $strstudents, $straction, get_string('studentcomments','scheduler'));
         $table->align = array ('CENTER', 'LEFT', 'LEFT', 'CENTER', 'CENTER', 'CENTER', 'LEFT', 'CENTER');
     } else {
-        $table->head  = array ('', $strdate, $strstart, $strend, $strstudents, s(scheduler_get_teacher_name($scheduler)), $straction);
+        $table->head  = array ('', $strdate, $strstart, $strend, $strstudents, s(scheduler_get_teacher_name($scheduler)), $straction, get_string('studentcomments','scheduler'));
         $table->align = array ('CENTER', 'LEFT', 'LEFT', 'CENTER', 'CENTER', 'CENTER', 'LEFT', 'LEFT', 'CENTER');
     }
-    $table->width = '90%';
+    $table->width = '95%';
     $offsetdatemem = '';
     foreach($slots as $slot) {
         if (!$slot->isappointed && $slot->starttime + (60 * $slot->duration) < time()) {
@@ -706,7 +706,13 @@ if ($slots){
                     $name = "<a href=\"view.php?what=viewstudent&amp;id={$cm->id}&amp;studentid={$student->id}&amp;course={$scheduler->course}&amp;order=DESC\">".fullname($student).'</a>';
                 }
                 
-                
+                $student2teachernotestr = '';
+                if ($appstudent->studentteachernotes != ''){
+                    $student2teachernotestr = '<div class="slotnotes">';
+                    $student2teachernotestr .= '<b>'.get_string('comments', 'scheduler').'&nbsp;</b>';
+                    $student2teachernotestr .= format_string($appstudent->studentteachernotes).'</div>';
+                }
+               
                 /// formatting grade
                 $grade=scheduler_format_grade($scheduler,$appstudent->grade,true);
                 
@@ -721,7 +727,7 @@ if ($slots){
                         $checkbox = '<img src="pix/unticked.gif" border="0">';
                     }
                 }
-                $studentArray[] = "$checkbox $picture $name $grade<br/>";
+                $studentArray[] = "$checkbox $picture $name $student2teachernotestr $grade<br/>";
             }
             $studentArray[] = "<a href=\"javascript:document.forms['appointementseen_{$slot->id}'].submit();\">".get_string('saveseen','scheduler').'</a>';
             $studentArray[] = "</form>";
@@ -788,11 +794,18 @@ if ($slots){
             $actions .= "&nbsp;<a href=\"view.php?what=reuse&amp;id={$cm->id}&amp;slotid={$slot->id}&amp;page={$page}\" title=\"{$strreused}\" ><img src=\"pix/volatile.gif\" alt=\"{$strreused}\" border=\"0\" /></a>";
         }
         $actions .= '</span>';
+
+        $teachernotes = '';
+        if ($slot->notes != ''){
+            $teachernotes = '<div class="slotnotes">';
+            $teachernotes .= format_string($slot->notes).'</div>';
+        }
+        
         if($page == 'myappointments'){
-            $table->data[] = array ($selectcheck, ($offsetdate == $offsetdatemem) ? '' : $offsetdate, $offsettime, $endtime, implode("\n",$studentArray), $actions);
+            $table->data[] = array ($selectcheck, ($offsetdate == $offsetdatemem) ? '' : $offsetdate, $offsettime, $endtime, implode("\n",$studentArray), $actions, $teachernotes);
         } else {
             $teacherlink = "<a href=\"$CFG->wwwroot/user/view.php?id={$slot->teacherid}\">".fullname($DB->get_record('user', array('id'=> $slot->teacherid)))."</a>";
-            $table->data[] = array ($selectcheck, ($offsetdate == $offsetdatemem) ? '' : $offsetdate, $offsettime, $endtime, implode("\n",$studentArray), $teacherlink, $actions);
+            $table->data[] = array ($selectcheck, ($offsetdate == $offsetdatemem) ? '' : $offsetdate, $offsettime, $endtime, implode("\n",$studentArray), $teacherlink, $actions, $teachernotes);
         }
         $offsetdatemem = $offsetdate;
     }

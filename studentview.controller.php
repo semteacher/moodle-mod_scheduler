@@ -21,6 +21,7 @@ if ($action == 'savechoice') {
     $slotid = optional_param('slotid', '', PARAM_INT);
     $appointgroup = optional_param('appointgroup', 0, PARAM_INT);
     // $notes = optional_param('notes', '', PARAM_TEXT);
+    $studentteachernotes = optional_param('studentnotes', '', PARAM_TEXT);
     
     if (!$slotid) {
         notice(get_string('notselected', 'scheduler'), "view.php?id={$cm->id}");
@@ -152,6 +153,7 @@ if ($action == 'savechoice') {
     	$appointment = new stdClass();
         $appointment->slotid = $slotid;
         // $appointment->notes = $notes;
+        $appointment->studentteachernotes = $studentteachernotes;
         $appointment->studentid = $astudentid;
         $appointment->attended = 0;
         $appointment->timecreated = time();
