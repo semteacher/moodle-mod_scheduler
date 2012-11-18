@@ -241,6 +241,7 @@ $string['studentbreakdown'] = 'By student';
 $string['studentcomments'] = 'Student\'s notes';
 $string['studentdetails'] = 'Student details';
 $string['studentnotes'] = 'Your notes about the appointment ';
+$string['studentnotesrequiredopt'] = 'Student must input notes for the appointmet';// @TDMU
 $string['students'] = 'Students';
 $string['sunday'] = 'Sunday';
 $string['teacher'] = 'Teacher';

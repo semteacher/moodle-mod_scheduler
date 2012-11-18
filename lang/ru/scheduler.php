@@ -241,6 +241,7 @@ $string['studentbreakdown'] = 'Студентом';
 $string['studentcomments'] = 'Примечания для студентов';
 $string['studentdetails'] = 'Детальная информация по студенту';
 $string['studentnotes'] = 'Ваши прмечания о графике приёма ';
+$string['studentnotesrequiredopt'] = 'Требовать от студента ввода примечание для записи на приём';// @TDMU
 $string['students'] = 'Студенты';
 $string['sunday'] = 'Воскресенье';
 $string['teacher'] = 'Преподаватель';
