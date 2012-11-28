@@ -28,6 +28,7 @@ class mod_scheduler_mod_form extends moodleform_mod {
 	    $mform->addElement('text', 'name', get_string('name'), array('size'=>'64'));
 	    $mform->setType('name', PARAM_CLEANHTML);
 	    $mform->addRule('name', null, 'required', null, 'client');
+        $mform->setDefault('name', get_string('defaultschedulername', 'scheduler').' - '.$COURSE->shortname);//@TDMU
 
         // Introduction.
         $this->add_intro_editor(false, get_string('introduction', 'scheduler'));
@@ -35,6 +36,7 @@ class mod_scheduler_mod_form extends moodleform_mod {
 	    $mform->addElement('text', 'staffrolename', get_string('staffrolename', 'scheduler'), array('size'=>'48'));
 	    $mform->setType('name', PARAM_CLEANHTML);
 	    $mform->addHelpButton('staffrolename', 'staffrolename', 'scheduler');
+        $mform->setDefault('staffrolename', get_string('defaultcourseteacher'));//@TDMU
 	
 	    $modeoptions['onetime'] = get_string('oneatatime', 'scheduler');
 	    $modeoptions['oneonly'] = get_string('oneappointmentonly', 'scheduler');
@@ -58,19 +60,20 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $yesno[1] = get_string('yes');		
         $mform->addElement('select', 'allowmulticourseappointment', get_string('multicoursesteacherappointment', 'scheduler'), $yesno);
         $mform->setHelpButton('allowmulticourseappointment', array('multicoursesappointment', get_string('multicoursesteacherappointment', 'scheduler'), 'scheduler'));
-        $mform->setDefault('allowmulticourseappointment', 0);
+        $mform->setDefault('allowmulticourseappointment', 1);//@TDMU
         
         $mform->addElement('select', 'studentnotesrequired', get_string('studentnotesrequiredopt', 'scheduler'), $yesno);
         $mform->addHelpButton('studentnotesrequired', 'studentnotesrequired', 'scheduler');
-        $mform->setDefault('studentnotesrequired', 0);
+        $mform->setDefault('studentnotesrequired', 1);//@TDMU
 
         $mform->addElement('modgrade', 'scale', get_string('grade'));
-        $mform->setDefault('scale', 0);
+        $mform->setDefault('scale', 12);
 
         $gradingstrategy[MEAN_GRADE] = get_string('meangrade', 'scheduler');
         $gradingstrategy[MAX_GRADE] = get_string('maxgrade', 'scheduler');
 	    $mform->addElement('select', 'gradingstrategy', get_string('gradingstrategy', 'scheduler'), $gradingstrategy);
 	    $mform->addHelpButton('gradingstrategy', 'gradingstrategy', 'scheduler');
+        $mform->setDefault('gradingstrategy', 1);
         $mform->disabledIf('gradingstrategy', 'scale', 'eq', 0);
 
 	    $mform->addElement('select', 'allownotifications', get_string('notifications', 'scheduler'), $yesno);

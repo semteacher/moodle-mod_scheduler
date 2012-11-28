@@ -80,6 +80,7 @@ $string['date'] = 'Дата';
 $string['datelist'] = 'Обзор';
 $string['defaultslotduration'] = 'Продлжительность интервала по-умолчанию';
 $string['defaultslotduration_help'] = 'Продлжительность по-умолчанию (в минутах) для интервала графика приёма, который Вы настраиваете';
+$string['defaultschedulername'] = 'Oтработки';//@TDMU
 $string['deleteallslots'] = '- все интервалы';
 $string['deleteallunusedslots'] = '- все незадействованные интервалы';
 $string['deletemyslots'] = '- все мои интервалы';

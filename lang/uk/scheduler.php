@@ -80,6 +80,7 @@ $string['date'] = 'Дата';
 $string['datelist'] = 'Огляд';
 $string['defaultslotduration'] = 'Тривалість інтервалу по-замовчуванню';
 $string['defaultslotduration_help'] = 'Тривалість по-замовчуванню (в хвилнах) для інтервалу графіку прийому, що Ви налаштовуєте';
+$string['defaultschedulername'] = 'Відробки';//@TDMU
 $string['deleteallslots'] = '- всі інтервали';
 $string['deleteallunusedslots'] = '- всі незадіяні інтервали';
 $string['deletemyslots'] = '- всі мої інтервали';
