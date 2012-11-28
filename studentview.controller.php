@@ -141,6 +141,8 @@ if ($action == 'savechoice') {
             scheduler_delete_calendar_events($oldappointment);
             // renew all calendar events as some appointments may be left for other students
             scheduler_add_update_calendar_events($oldappointment, $course);
+            //increase capability of the all other overlapped slots of this teacher
+            scheduler_autoupdate_student_count(-1, $oldappointment, $scheduler, $CFG->scheduler_maxstudentsperslot);//@TDMU
         }
     }
     
@@ -167,6 +169,8 @@ if ($action == 'savechoice') {
             $vars = scheduler_get_mail_variables($scheduler,$newslot,$teacher,$student);
             scheduler_send_email_from_template($teacher, $student, $course, 'newappointment', 'applied', $vars, 'scheduler');
         }
+        //decrease capability of the all other overlapped slots of this teacher
+        scheduler_autoupdate_student_count(1, $slot, $scheduler, $CFG->scheduler_maxstudentsperslot); //@TDMU
     }
 }
 // *********************************** Disengage alone from the slot ******************************/
@@ -179,6 +183,9 @@ if ($action == 'disengage') {
         foreach($appointments as $appointment){
             $oldslot = $DB->get_record('scheduler_slots', array('id' => $appointment->slotid));
             scheduler_delete_appointment($appointment->id, $oldslot, $scheduler);
+            
+            //increase capability of the all other overlapped slots of this teacher
+            scheduler_autoupdate_student_count(-1, $oldslot, $scheduler, $CFG->scheduler_maxstudentsperslot);//@TDMU
             
             // notify teacher
             if ($scheduler->allownotifications){

@@ -193,6 +193,11 @@ switch ($action) {
             echo $OUTPUT->heading(get_string('slotupdated','scheduler'));
         }
         
+        //prepare cout of the udated appointments
+        $appointmentoldcount = $DB->count_records('scheduler_appointment', array('slotid' => $slot->id));
+        $appointmentnewcount = count($appointments);
+        $appointmentdelta = $appointmentnewcount - $appointmentoldcount;
+        
         $DB->delete_records('scheduler_appointment', array('slotid'=>$slot->id)); // cleanup old appointments
         if($appointments){
             foreach ($appointments as $appointment){ // insert updated
@@ -201,6 +206,9 @@ switch ($action) {
 		        scheduler_update_grades($scheduler, $appointment->studentid);
             }
         }
+
+        //update (increase/decrease) overlaped slots capability
+        scheduler_autoupdate_student_count($appointmentdelta, $slot, $scheduler, $CFG->scheduler_maxstudentsperslot);//@TDMU
         
         scheduler_events_update($slot, $course);
         break;
@@ -433,12 +441,16 @@ switch ($action) {
         if ($slot = $DB->get_record('scheduler_slots', array('id' => $slotid))){
             // unassign student to the slot
             $oldstudents = $DB->get_records('scheduler_appointment', array('slotid' => $slot->id), '', 'id,studentid');
+            $appointmentdelta = 0 - count($oldstudents);//must be less then 0!
             
             if ($oldstudents){            
                 foreach($oldstudents as $oldstudent){
                     scheduler_delete_appointment($oldstudent->id, $slot, $scheduler);
                 }
             }
+
+            //increase capability of the all other overlapped slots of this teacher
+            scheduler_autoupdate_student_count($appointmentdelta, $slot, $scheduler, $CFG->scheduler_maxstudentsperslot);//@TDMU
             
             // delete subsequent event
             scheduler_delete_calendar_events($slot);
