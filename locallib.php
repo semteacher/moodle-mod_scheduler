@@ -134,7 +134,7 @@ function scheduler_get_conflicts($schedulerid, $starttime, $endtime, $teacher=0,
     $teacherScope = ($teacher != 0) ? "s.teacherid = {$teacher} AND " : '' ;
     $studentJoin = ($student != 0) ? "JOIN {scheduler_appointment} a ON a.slotid = s.id AND a.studentid = {$student} " : '' ;
     //$exclusiveClause = ($careexclusive) ? "exclusivity != 0 AND " : '' ;
-    //TDMU - consider exclusivity just for a personal appoinments 
+    //TDMU - consider exclusivity just as a personal appoinments
     $exclusiveClause = ($careexclusive) ? "exclusivity = 1 AND " : '' ;
     
 	$timeClause = "( (s.starttime <= {$starttime} AND s.starttime + s.duration * 60 > {$starttime}) OR ".
@@ -419,6 +419,75 @@ function scheduler_delete_appointment($appointmentid, $slot=null, $scheduler=nul
             }
         }
     }
+}
+
+/**
+* This function is used only when slot overlaping for one teacher in the diffrent courses is enabled (allowmulticourseappointment=1).
+* It automatically decrease/increase count of the students that can be appointed to all slots that are overlapped with curent slot.
+* @param int $appointdelta - diference betwen current slot capability in database and now appointed students count.
+* @param obj $slot - a slot data object
+* @param obj $scheduler - a scheduler data object
+* @param int $maxexclusivity - maxium count of the student for a group appointment
+*/
+function scheduler_autoupdate_student_count($appointdelta, $slot, $scheduler=null, $maxexclusivity=null){
+    global $CFG, $DB;
+
+    if (!$scheduler){ // fetch optimization
+        $scheduler = $DB->get_record('scheduler', 'id', $slot->schedulerid);
+    }
+    
+    if (!$maxexclusivity){ // fetch optimization
+        $maxexclusivity = $CFG->scheduler_maxstudentsperslot;
+    }
+    
+    $id_unlimited   = 0;  //id for the unlimited students count per slot
+    $id_personal    = 1;  //id for the personal appointed slot
+    
+    if($slot){
+        if ($appointdelta > 0){
+            //decrease capability of the all other overlapped slots of this teacher
+            if ($scheduler->allowmulticourseappointment) {
+            //get all slots that is overlapped with currrent slot of this teacher
+                $conflictsRemote = scheduler_get_conflicts($scheduler->id, $slot->starttime, $slot->starttime + $slot->duration * 60, $slot->teacherid, 0, SCHEDULER_OTHERS, false);
+                if ($conflictsRemote) {  //overlapped slots exist          
+                    foreach($conflictsRemote as $conflict){
+                        //get amount of attended students
+                        $conflict->population = $DB->count_records('scheduler_appointment', array('slotid' => $conflict->id));
+                        //decrease count of free position for this slot attending
+                        if ($conflict->exclusivity != $id_unlimited) {//decrease only not unlimited student count slots (!=0)
+                            if ($conflict->exclusivity>$conflict->population && $conflict->exclusivity>$id_personal+1){ //(>2)
+                                if ($conflict->exclusivity-$appointdelta <= $id_personal){//(<=2)
+                                    $conflict->exclusivity = $id_personal+1;//2- minimum student count for the group appointment slot mode
+                                } else {
+                                    $conflict->exclusivity = $conflict->exclusivity-$appointdelta;
+                                }
+                                $DB->update_record('scheduler_slots', $conflict);
+                            }
+                        }
+                    }            
+                }
+            }              
+        }elseif($appointdelta < 0){
+            //increase capability of the all other overlapped slots of this teacher
+            if ($scheduler->allowmulticourseappointment) {
+            //get all slots that is overlapped with currrent slot of this teacher
+            $conflictsRemote = scheduler_get_conflicts($scheduler->id, $slot->starttime, $slot->starttime + $slot->duration * 60, $slot->teacherid, 0, SCHEDULER_OTHERS, false);
+                if ($conflictsRemote) {  //overlapped slots exist          
+                    foreach($conflictsRemote as $conflict){
+                    //increase count of free position for this slot attending
+                        if ($conflict->exclusivity > $id_personal) {//increase only not unlimited student count slots or not personal appointed (!=0 or !=1)
+                            if ($conflict->exclusivity+abs($appointdelta)<=$maxexclusivity){
+                                $conflict->exclusivity = $conflict->exclusivity+abs($appointdelta);
+                            } else {
+                                $conflict->exclusivity = $maxexclusivity;
+                            }
+                            $DB->update_record('scheduler_slots', $conflict);
+                        }
+                    }            
+                }
+            }              
+        }
+    }          
 }
 
 /**
