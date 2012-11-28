@@ -54,7 +54,7 @@ class mod_scheduler_mod_form extends moodleform_mod {
 	    $mform->addElement('text', 'defaultslotduration', get_string('defaultslotduration', 'scheduler'), array('size'=>'2'));
 	    $mform->setType('defaultslotduration', PARAM_INT);
 	    $mform->addHelpButton('defaultslotduration', 'defaultslotduration', 'scheduler');
-        $mform->setDefault('defaultslotduration', 15);
+        $mform->setDefault('defaultslotduration', 360);//@TDMU
         
         $yesno[0] = get_string('no');
         $yesno[1] = get_string('yes');		

@@ -74,7 +74,7 @@ function get_session_data(&$form){
     $form->exclusivity = required_param('exclusivity', PARAM_INT);
     $form->reuse = required_param('reuse', PARAM_INT);
     $form->divide = optional_param('divide', 0, PARAM_INT);
-    $form->duration = optional_param('duration', 15, PARAM_INT);
+    $form->duration = optional_param('duration', $scheduler->defaultslotduration, PARAM_INT);
     // if no teacher specified, the current user (who edits the slot) is assumed to be the teacher
     $form->teacherid = optional_param('teacherid', $USER->id, PARAM_INT);
     $form->appointmentlocation = optional_param('appointmentlocation', '', PARAM_CLEAN);
@@ -151,9 +151,9 @@ if ($action == 'addslot'){
         // blank appointment data
         if (empty($form->appointments)) $form->appointments = array();
         $form->starttime = time();
-        $form->duration = 15;
+        $form->duration = $scheduler->defaultslotduration;//TDMU
         $form->reuse = 1;
-        $form->exclusivity = 1;
+        $form->exclusivity = $CFG->scheduler_maxstudentsperslot;//@TDMU
         $form->hideuntil = $scheduler->timemodified; // supposed being in the past so slot is visible
         $form->notes = '';
         $form->teacherid = $USER->id;
@@ -253,16 +253,19 @@ if ($action == 'addsession') {
         get_session_data($data);
         $form = &$data;
     } else {
+        $form->duration = $scheduler->defaultslotduration;//@TDMU
         $form->rangestart = time();
         $form->rangeend = time();
-        $form->timestart = time();
-        $form->timeend = time() + HOURSECS;
+        //$form->timestart = time();
+        //$form->timeend = time() + HOURSECS;
+        //Time sart - today at 15.30
+        $form->timestart = make_timestamp(date('Y',$form->rangestart), date('m',$form->rangestart), date('d',$form->rangestart), 15, 30);//@TDMU
+        //Time end propouse time interval with length 5 minutes more than default duration - guarantee for one slot
+        $form->timeend = $form->timestart + ($form->duration+5)*MINSECS;//@TDMU
         $form->hideuntil = $scheduler->timemodified;
-        $form->duration = $scheduler->defaultslotduration;
         $form->forcewhenoverlap = 0;
         $form->teacherid = $USER->id;
-        $form->exclusivity = 1;
-        $form->duration = $scheduler->defaultslotduration;
+        $form->exclusivity = $CFG->scheduler_maxstudentsperslot;//@TDMU
         $form->reuse = 1;
         $form->monday = 1;
         $form->tuesday = 1;
@@ -298,17 +301,18 @@ if ($action == 'addaperiodsession') {
         get_aperiod_session_data($data);
         $form = &$data;
     } else {
+        $form->duration = $scheduler->defaultslotduration;//@TDMU
         $form->rangestart = time();
         $form->rangeend = time();
-        $form->timestart = time();
-		//time end propouse time interval with length 5 minutes more than default duration - guarantee for one slot
-        $form->timeend = time() + ($scheduler->defaultslotduration+5)*60;
+        //$form->timestart = time();
+        //Time sart - today at 15.30
+        $form->timestart = make_timestamp(date('Y',$form->rangestart), date('m',$form->rangestart), date('d',$form->rangestart), 15, 30);//@TDMU
+        //Time end propouse time interval with length 5 minutes more than default duration - guarantee for one slot
+        $form->timeend = $form->timestart + ($form->duration+5)*MINSECS;//@TDMU
         $form->hideuntil = $scheduler->timemodified;
-        $form->duration = $scheduler->defaultslotduration;
         $form->forcewhenoverlap = 0;
         $form->teacherid = $USER->id;
-        $form->exclusivity = 1;
-        //$form->duration = $scheduler->defaultslotduration;
+        $form->exclusivity = $CFG->scheduler_maxstudentsperslot;//@TDMU
         $form->reuse = 1;
     }
 
@@ -354,9 +358,9 @@ if ($action == 'schedule') {
             $form->what = 'doaddupdateslot';
             $form->slotid = 0;
             $form->starttime = time();
-            $form->duration = 15;
+            $form->duration = $scheduler->defaultslotduration;//@TDMU
             $form->reuse = 1;
-            $form->exclusivity = 1;
+            $form->exclusivity = $CFG->scheduler_maxstudentsperslot;//@TDMU
             $form->hideuntil = $scheduler->timemodified; // supposed being in the past so slot is visible
             $form->notes = '';
             $form->teacherid = $USER->id;
@@ -386,9 +390,9 @@ if ($action == 'schedule') {
             $form->availableslots = scheduler_get_available_slots($form->studentid, $scheduler->id);
             $form->what = 'doaddupdateslot' ;
             $form->starttime = time();
-            $form->duration = $scheduler->defaultslotduration;
+            $form->duration = $scheduler->defaultslotduration;//@TDMU
             $form->reuse = 1;
-            $form->exclusivity = 1;
+            $form->exclusivity = $CFG->scheduler_maxstudentsperslot;//@TDMU
             $form->hideuntil = $scheduler->timemodified; // supposed being in the past so slot is visible
             $form->notes = '';
             $form->teacherid = $USER->id;
@@ -471,9 +475,9 @@ if ($action == 'schedulegroup') {
             $form->what = 'doaddupdateslot';
             $form->slotid = 0;
             $form->starttime = time();
-            $form->duration = 15;
+            $form->duration = $scheduler->defaultslotduration;//@TDMU
             $form->reuse = 1;
-            $form->exclusivity = 1;
+            $form->exclusivity = $CFG->scheduler_maxstudentsperslot;//@TDMU
             $form->hideuntil = $scheduler->timemodified; // supposed being in the past so slot is visible
             $form->notes = '';
             $form->teacherid = $USER->id;
@@ -503,7 +507,7 @@ if ($action == 'schedulegroup') {
             $form->availableslots = scheduler_get_unappointed_slots($scheduler->id);
             $form->what = 'doaddupdateslot' ;
             $form->starttime = time();
-            $form->duration = $scheduler->defaultslotduration;
+            $form->duration = $scheduler->defaultslotduration;//@TDMU
             $form->reuse = 1;
             $form->hideuntil = $scheduler->timemodified; // supposed being in the past so slot is visible
             $form->notes = '';
