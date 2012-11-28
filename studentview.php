@@ -136,9 +136,13 @@ if ($slots = scheduler_get_available_slots($USER->id, $scheduler->id, true)) {
             $startdate = scheduler_userdate($aSlot->starttime,1);
             $starttime = scheduler_usertime($aSlot->starttime,1);
             $endtime = scheduler_usertime($aSlot->starttime + ($aSlot->duration * 60),1);
-            $startdatestr = ($startdate == $previousdate) ? '' : $startdate ;
-            $starttimestr = ($starttime == $previoustime) ? '' : $starttime ;
-            $endtimestr = ($endtime == $previousendtime) ? '' : $endtime ;
+            //$startdatestr = ($startdate == $previousdate) ? '' : $startdate ;
+            //$starttimestr = ($starttime == $previoustime) ? '' : $starttime ;
+            //$endtimestr = ($endtime == $previousendtime) ? '' : $endtime ;
+            //TDMU - Full date and time shown for each attended slots
+            $startdatestr = $startdate;
+            $starttimestr = $starttime;
+            $endtimestr = $endtime;
             $studentappointment = $DB->get_record('scheduler_appointment', array('slotid' => $aSlot->id, 'studentid' => $USER->id));
             if ($scheduler->scale  > 0){
                 $studentappointment->grade = $studentappointment->grade.'/'.$scheduler->scale;
@@ -212,9 +216,13 @@ if ($slots = scheduler_get_available_slots($USER->id, $scheduler->id, true)) {
         $startdate = scheduler_userdate($aSlot->starttime,1);
         $starttime = scheduler_usertime($aSlot->starttime,1);
         $endtime = scheduler_usertime($aSlot->starttime + ($aSlot->duration * 60),1);
-        $startdatestr = ($startdate == $previousdate) ? '' : $startdate ;
-        $starttimestr = ($starttime == $previoustime) ? '' : $starttime ;
-        $endtimestr = ($endtime == $previousendtime) ? '' : $endtime ;
+        //$startdatestr = ($startdate == $previousdate) ? '' : $startdate ;
+        //$starttimestr = ($starttime == $previoustime) ? '' : $starttime ;
+        //$endtimestr = ($endtime == $previousendtime) ? '' : $endtime ;
+        //TDMU - Full time shown for each appointable slots
+        $startdatestr = $startdate;
+        $starttimestr = $starttime;
+        $endtimestr = $endtime;
         $location = s($aSlot->appointmentlocation);
 
         $teachernotes = '';
