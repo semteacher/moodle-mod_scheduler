@@ -139,7 +139,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
     
         /// Define field allowmulticourseappointment to be added to scheduler table	
         $table = new xmldb_table('scheduler');	
-        $field = new xmldb_field('allowmulticourseappointment', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'defaultslotduration');
+        $field = new xmldb_field('allowmulticourseappointment', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '1', 'defaultslotduration');
         //$field->setAttributes(XMLDB_TYPE_INTEGER, '4', false, XMLDB_NOTNULL, false, false, null, 0, 'defaultslotduration');
         
         if (!$dbman->field_exists($table, $field)) {
@@ -156,7 +156,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         
         /// Define field studentnotesrequired to be added to scheduler table  
         $table = new xmldb_table('scheduler');  
-        $field = new xmldb_field('studentnotesrequired', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'allowmulticourseappointment');
+        $field = new xmldb_field('studentnotesrequired', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '1', 'allowmulticourseappointment');
         //$field->setAttributes(XMLDB_TYPE_INTEGER, '4', false, XMLDB_NOTNULL, false, false, null, 0, 'allowmulticourseappointment');
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
