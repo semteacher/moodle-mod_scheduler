@@ -42,7 +42,7 @@ function get_slot_data(&$form){
 /**
  *
  */
-function get_session_data(&$form){
+function get_session_data($defaultslotduration, &$form){
 	global $USER;
 	$form = new stdClass();
     if (!$form->rangestart = optional_param('rangestart', '', PARAM_INT)){
@@ -74,7 +74,7 @@ function get_session_data(&$form){
     $form->exclusivity = required_param('exclusivity', PARAM_INT);
     $form->reuse = required_param('reuse', PARAM_INT);
     $form->divide = optional_param('divide', 0, PARAM_INT);
-    $form->duration = optional_param('duration', $scheduler->defaultslotduration, PARAM_INT);
+    $form->duration = optional_param('duration', $defaultslotduration, PARAM_INT);
     // if no teacher specified, the current user (who edits the slot) is assumed to be the teacher
     $form->teacherid = optional_param('teacherid', $USER->id, PARAM_INT);
     $form->appointmentlocation = optional_param('appointmentlocation', '', PARAM_CLEAN);
@@ -85,7 +85,7 @@ function get_session_data(&$form){
 /**
 *
 */
-function get_aperiod_session_data(&$form){
+function get_aperiod_session_data($defaultslotduration, &$form){
 	$listdatestxt = required_param('listdates', PARAM_TEXT);//string var.
 	$form->listdates = explode(",",$listdatestxt);			//array of string dates
 	
@@ -112,7 +112,7 @@ function get_aperiod_session_data(&$form){
     $form->exclusivity = required_param('exclusivity', PARAM_INT);
     $form->reuse = required_param('reuse', PARAM_INT);
     $form->divide = optional_param('divide', 0, PARAM_INT);
-    $form->duration = optional_param('duration', $scheduler->defaultslotduration, PARAM_INT);
+    $form->duration = optional_param('duration', $defaultslotduration, PARAM_INT);
     // if no teacher specified, the current user (who edits the slot) is assumed to be the teacher
     $form->teacherid = optional_param('teacherid', $USER->id, PARAM_INT);
     $form->appointmentlocation = optional_param('appointmentlocation', '', PARAM_CLEAN);
@@ -250,7 +250,7 @@ if ($action == 'addsession') {
     
     $form = new stdClass();
     if (!empty($errors)){
-        get_session_data($data);
+        get_session_data($scheduler->defaultslotduration, $data);
         $form = &$data;
     } else {
         $form->duration = $scheduler->defaultslotduration;//@TDMU
@@ -298,7 +298,7 @@ if ($action == 'addaperiodsession') {
     
     $form = new stdClass();
     if (!empty($errors)){
-        get_aperiod_session_data($data);
+        get_aperiod_session_data($scheduler->defaultslotduration, $data);
         $form = &$data;
     } else {
         $form->duration = $scheduler->defaultslotduration;//@TDMU
