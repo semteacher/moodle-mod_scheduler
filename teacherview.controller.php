@@ -216,7 +216,7 @@ switch ($action) {
     /************************************ Saving a session with slots *************************************/
     case 'doaddsession':{
         // This creates sessions using the data submitted by the user via the form on add.html
-        get_session_data($data);
+        get_session_data($scheduler->defaultslotduration, $data);
         
         $fordays = (($data->rangeend - $data->rangestart) / DAYSECS);
         
@@ -402,7 +402,7 @@ switch ($action) {
 /************************************ Saving a aperiod session with slots ********************************/
     case 'doaddaperiodsession':{
         // This creates aperiod sessions using the data submitted by the user via the form on add.html
-        get_aperiod_session_data($data);
+        get_aperiod_session_data($scheduler->defaultslotduration, $data);
 		
         $errors = array();
 
