@@ -66,7 +66,18 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
                 $slot->emaildate = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 0, 0) - $data->emaildaterel;
             }
             while ($slot->starttime <= $data->timeend - $data->duration * 60) {
-                $conflicts = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_ALL, false);
+                //$conflicts = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_ALL, false);
+				if ($scheduler->allowmulticourseappointment) {
+			        $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->starttime, $data->starttime + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, true);	
+                }
+                else {
+                     $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->starttime, $data->starttime + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, false);			
+                }
+                $conflictsLocal = scheduler_get_conflicts($scheduler->id, $data->starttime, $data->starttime + $data->duration * 60, $data->teacherid, 0, SCHEDULER_SELF, false);
+                if (!$conflictsRemote) $conflictsRemote = array();
+                if (!$conflictsLocal) $conflictsLocal = array();
+                $conflicts = $conflictsRemote + $conflictsLocal;
+                
                 if ($conflicts) {
                     if (!$data->forcewhenoverlap) {
                         print_string('conflictingslots', 'scheduler');
@@ -144,12 +155,16 @@ switch ($action) {
         if ($slot = $DB->get_record('scheduler_slots', array('id' => $slotid))) {
             // unassign student to the slot
             $oldstudents = $DB->get_records('scheduler_appointment', array('slotid' => $slot->id), '', 'id,studentid');
+            $appointmentdelta = 0 - count($oldstudents);//must be less then 0!//TDMU???
 
             if ($oldstudents) {
                 foreach ($oldstudents as $oldstudent) {
                     scheduler_delete_appointment($oldstudent->id, $slot, $scheduler);
                 }
             }
+
+            //increase capability of the all other overlapped slots of this teacher
+            scheduler_autoupdate_student_count($appointmentdelta, $slot, $scheduler, $CFG->scheduler_maxstudentsperslot);//@TDMU
 
             // delete subsequent event
             scheduler_delete_calendar_events($slot);
