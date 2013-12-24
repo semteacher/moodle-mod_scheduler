@@ -68,12 +68,12 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
             while ($slot->starttime <= $data->timeend - $data->duration * 60) {
                 //$conflicts = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_ALL, false);
 				if ($scheduler->allowmulticourseappointment) {
-			        $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->starttime, $data->starttime + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, true);	
+			        $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, true);	
                 }
                 else {
-                     $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->starttime, $data->starttime + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, false);			
+                     $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, false);			
                 }
-                $conflictsLocal = scheduler_get_conflicts($scheduler->id, $data->starttime, $data->starttime + $data->duration * 60, $data->teacherid, 0, SCHEDULER_SELF, false);
+                $conflictsLocal = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_SELF, false);
                 if (!$conflictsRemote) $conflictsRemote = array();
                 if (!$conflictsLocal) $conflictsLocal = array();
                 $conflicts = $conflictsRemote + $conflictsLocal;
@@ -83,10 +83,11 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
                         print_string('conflictingslots', 'scheduler');
                         echo '<ul>';
                         foreach ($conflicts as $aconflict) {
-                            $sql = 'SELECT c.fullname, c.shortname, sl.starttime '
-                                            .'FROM {course} c, {scheduler} s, {scheduler_slots} sl '
-                                            .'WHERE s.course = c.id AND sl.schedulerid = s.id AND sl.id = :conflictid';
-                            $conflictinfo = $DB->get_record_sql($sql, array('conflictid' => $aconflict->id));
+                            //$sql = 'SELECT c.fullname, c.shortname, sl.starttime '
+                            //                .'FROM {course} c, {scheduler} s, {scheduler_slots} sl '
+                            //                .'WHERE s.course = c.id AND sl.schedulerid = s.id AND sl.id = :conflictid';
+                            //$conflictinfo = $DB->get_record_sql($sql, array('conflictid' => $aconflict->id));
+                            $conflictinfo = scheduler_get_courseinfobyslotid($aconflict->id);//TDMU
                             $msg = userdate($conflictinfo->starttime) . ' ' . usertime($conflictinfo->starttime) . ' ' . get_string('incourse', 'scheduler') . ': ';
                             $msg .= $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
                             echo html_writer::tag('li', $msg);

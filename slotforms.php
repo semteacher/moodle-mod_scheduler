@@ -252,10 +252,14 @@ class scheduler_editslot_form extends scheduler_slotform_base {
             // Avoid overlapping slots, by asking the user if they'd like to overwrite the existing ones...
             // for other scheduler, we check independently of exclusivity. Any slot here conflicts
             // for this scheduler, we check against exclusivity. Any complete slot here conflicts
-            $conflicts_remote = scheduler_get_conflicts($this->scheduler->id,
-                            $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_OTHERS, false);
-            $conflicts_local = scheduler_get_conflicts($this->scheduler->id,
-                            $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_SELF, true);
+            if ($this->scheduler->allowmulticourseappointment) {
+                $srch_condition = true;
+            }
+            else {
+                $srch_condition = false;
+            }
+            $conflicts_remote = scheduler_get_conflicts($this->scheduler->id, $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_OTHERS, $srch_condition);            
+            $conflicts_local = scheduler_get_conflicts($this->scheduler->id, $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_SELF, true);
             if (!$conflicts_remote) {
                 $conflicts_remote = array();
             }
@@ -275,10 +279,12 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                 foreach ($conflicts as $conflict) {
                     $students = scheduler_get_appointed($conflict->id);
 
+                    $conflictinfo = scheduler_get_courseinfobyslotid($conflict->id);
                     $slotmsg = userdate($conflict->starttime);
                     $slotmsg .= ' [';
                     $slotmsg .= $conflict->duration.' '.get_string('minutes');
-                    $slotmsg .= ']';
+                    $slotmsg .= '] ';
+                    $slotmsg .= get_string('incourse', 'scheduler') . ': ' . $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
 
                     if ($students) {
                         $slotmsg .= ' (';
