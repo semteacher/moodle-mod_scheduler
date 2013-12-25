@@ -253,12 +253,12 @@ class scheduler_editslot_form extends scheduler_slotform_base {
             // for other scheduler, we check independently of exclusivity. Any slot here conflicts
             // for this scheduler, we check against exclusivity. Any complete slot here conflicts
             if ($this->scheduler->allowmulticourseappointment) {
-                $srch_condition = true;
+                $exclusive_condition = true;
             }
             else {
-                $srch_condition = false;
+                $exclusive_condition = false;
             }
-            $conflicts_remote = scheduler_get_conflicts($this->scheduler->id, $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_OTHERS, $srch_condition);            
+            $conflicts_remote = scheduler_get_conflicts($this->scheduler->id, $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_OTHERS, $exclusive_condition);            
             $conflicts_local = scheduler_get_conflicts($this->scheduler->id, $data['starttime'], $data['starttime'] + $data['duration'] * 60, $data['teacherid'], 0, SCHEDULER_SELF, true);
             if (!$conflicts_remote) {
                 $conflicts_remote = array();

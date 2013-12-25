@@ -66,27 +66,25 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
                 $slot->emaildate = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 0, 0) - $data->emaildaterel;
             }
             while ($slot->starttime <= $data->timeend - $data->duration * 60) {
-                //$conflicts = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_ALL, false);
-				if ($scheduler->allowmulticourseappointment) {
-			        $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, true);	
+                //TDMU exclusivity check-out
+                if ($scheduler->allowmulticourseappointment) {
+                    $exclusive_condition = true;
                 }
                 else {
-                     $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, false);			
-                }
+                    $exclusive_condition = false;
+                }          
+                $conflictsRemote = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_OTHERS, $exclusive_condition);
                 $conflictsLocal = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_SELF, false);
                 if (!$conflictsRemote) $conflictsRemote = array();
                 if (!$conflictsLocal) $conflictsLocal = array();
                 $conflicts = $conflictsRemote + $conflictsLocal;
-                
+                //$conflicts = scheduler_get_conflicts($scheduler->id, $data->timestart, $data->timestart + $data->duration * 60, $data->teacherid, 0, SCHEDULER_ALL, false);//origin
+                                
                 if ($conflicts) {
                     if (!$data->forcewhenoverlap) {
                         print_string('conflictingslots', 'scheduler');
                         echo '<ul>';
                         foreach ($conflicts as $aconflict) {
-                            //$sql = 'SELECT c.fullname, c.shortname, sl.starttime '
-                            //                .'FROM {course} c, {scheduler} s, {scheduler_slots} sl '
-                            //                .'WHERE s.course = c.id AND sl.schedulerid = s.id AND sl.id = :conflictid';
-                            //$conflictinfo = $DB->get_record_sql($sql, array('conflictid' => $aconflict->id));
                             $conflictinfo = scheduler_get_courseinfobyslotid($aconflict->id);//TDMU
                             $msg = userdate($conflictinfo->starttime) . ' ' . usertime($conflictinfo->starttime) . ' ' . get_string('incourse', 'scheduler') . ': ';
                             $msg .= $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
