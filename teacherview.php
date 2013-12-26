@@ -210,6 +210,27 @@ if ($action == 'addsession') {
         die;
     }
 }
+/************************************ Add session multiple slots form ****************************************/
+if ($action == 'addaperiodsession') {
+
+    $actionurl = new moodle_url('/mod/scheduler/view.php',
+                    array('what' => 'addsession', 'id' => $cm->id, 'page' => $page));
+    $returnurl = new moodle_url('/mod/scheduler/view.php',
+                    array('what' => 'view', 'id' => $cm->id, 'page' => $page));
+
+    $mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $usergroups);
+
+    if ($mform->is_cancelled()) {
+        redirect($returnurl);
+    } else if ($formdata = $mform->get_data()) {
+        scheduler_action_doaddaperiodsession($scheduler, $formdata);
+    } else {
+        echo $OUTPUT->heading(get_string('addaperiodsession', 'scheduler'));
+        $mform->display();
+        echo $OUTPUT->footer($course);
+        die;
+    }
+}
 /************************************ Schedule a student form ***********************************************/
 if ($action == 'schedule') {
     if ($subaction == 'dochooseslot') {
