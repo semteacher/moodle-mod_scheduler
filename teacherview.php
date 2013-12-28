@@ -213,6 +213,35 @@ if ($action == 'addsession') {
 /************************************ Add session multiple slots form ****************************************/
 if ($action == 'addaperiodsession') {
 
+        $courselang = substr($COURSE->lang, 0, 2); 
+        if ($courselang == 'en'){
+            $courselang = '';
+        }
+        $listdates = "";
+        $rangestart = time();
+
+        echo '<style type="text/css">@import "'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.css";</style>';
+        echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
+        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.js">
+</script>';
+        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.lang.js">
+</script>';
+        echo '<script type="text/javascript">';
+        echo '$(function(){
+    $.datepick.setDefaults($.datepick.regional['.$courselang.']);
+	$("#multiInlinePicker").datepick({showTrigger: "#calImg", dateFormat: $.datepick.TIMESTAMP, multiSelect: 999, monthsToShow: 4, monthsToStep: 4, minDate: '.$rangestart.'});});';
+        echo 'function getMultipleDates()
+{
+var listdates1 = $("#multiInlinePicker").datepick("getDate");
+    var listdates = ""; 
+    for (var i = 0; i < listdates1.length; i++) { 
+        listdates += (i == 0 ? "" : ",") + $.datepick.formatDate("yyyy-mm-dd", listdates1[i]); 
+		}
+    $("#getlistdates").val(listdates || "");
+}';
+        echo '</script>';
+
+        
     $actionurl = new moodle_url('/mod/scheduler/view.php',
                     array('what' => 'addsession', 'id' => $cm->id, 'page' => $page));
     $returnurl = new moodle_url('/mod/scheduler/view.php',
