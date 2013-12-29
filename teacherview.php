@@ -220,30 +220,28 @@ if ($action == 'addaperiodsession') {
         $listdates = "";
         $rangestart = time();
 
-        echo '<style type="text/css">@import "'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.css";</style>';
-        echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
-        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.js">
-</script>';
-        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.lang.js">
-</script>';
-        echo '<script type="text/javascript">';
-        echo '$(function(){
-    $.datepick.setDefaults($.datepick.regional['.$courselang.']);
-	$("#multiInlinePicker").datepick({showTrigger: "#calImg", dateFormat: $.datepick.TIMESTAMP, multiSelect: 999, monthsToShow: 4, monthsToStep: 4, minDate: '.$rangestart.'});});';
-        echo 'function getMultipleDates()
-{
-var listdates1 = $("#multiInlinePicker").datepick("getDate");
-    var listdates = ""; 
-    for (var i = 0; i < listdates1.length; i++) { 
-        listdates += (i == 0 ? "" : ",") + $.datepick.formatDate("yyyy-mm-dd", listdates1[i]); 
-		}
-    $("#getlistdates").val(listdates || "");
-}';
-        echo '</script>';
+//        echo '<style type="text/css">@import "'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.css";</style>';
+//       echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
+//        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.js"></script>';
+//        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.lang.js"></script>';
+//        echo '<script type="text/javascript">';
+//        echo '$(function(){
+//    $.datepick.setDefaults($.datepick.regional['.$courselang.']);
+//	$("#multiInlinePicker").datepick({showTrigger: "#calImg", dateFormat: $.datepick.TIMESTAMP, multiSelect: 999, monthsToShow: 4, monthsToStep: 4, minDate: '.$rangestart.'});});';
+//        echo 'function getMultipleDates()
+//{
+//var listdates1 = $("#multiInlinePicker").datepick("getDate");
+//    var listdates = ""; 
+//    for (var i = 0; i < listdates1.length; i++) { 
+//        listdates += (i == 0 ? "" : ",") + $.datepick.formatDate("yyyy-mm-dd", listdates1[i]); 
+//		}
+//    $("#getlistdates").val(listdates || "");
+//}';
+//        echo '</script>';
 
         
     $actionurl = new moodle_url('/mod/scheduler/view.php',
-                    array('what' => 'addsession', 'id' => $cm->id, 'page' => $page));
+                    array('what' => 'addaperiodsession', 'id' => $cm->id, 'page' => $page));
     $returnurl = new moodle_url('/mod/scheduler/view.php',
                     array('what' => 'view', 'id' => $cm->id, 'page' => $page));
 
@@ -375,7 +373,9 @@ if ($action == 'schedulegroup') {
 
 
 /// print top tabs
-
+//    $PAGE->requires->js('/yui/yui_cal.js');//TDMU
+    $PAGE->requires->yui_module('moodle-mod_scheduler-yui_cal', 'M.mod_scheduler.yui_cal.init');
+    
 $tabrows = array();
 $row  = array();
 
@@ -455,6 +455,7 @@ if ($slots){
 }
 
 $straddsession = get_string('addsession', 'scheduler');
+$straddaperiodsession = get_string('addaperiodsession', 'scheduler');//TDMU
 $straddsingleslot = get_string('addsingleslot', 'scheduler');
 $strdownloadexcel = get_string('downloadexcel', 'scheduler');
 

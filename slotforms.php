@@ -542,7 +542,7 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 //        $mform->addElement('html', '<div class="qheader">');
 
 //        $mform->addElement('html', '</script>');
-        $mform->addElement('html', '<div id="multiInlinePicker"></div>');
+//        $mform->addElement('html', '<div id="multiInlinePicker"></div>');
         
 
         
