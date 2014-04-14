@@ -11,6 +11,41 @@
 
 
 defined('MOODLE_INTERNAL') || die();
+//TDMU
+function form_init_mycalendar_js() {
+    global $PAGE;
+    static $done = false;
+    if (!$done) {
+        $module   = 'moodle-mod_scheduler-mydateselector';
+        $function = 'M.mod_scheduler.mydateselector.init_date_selectors';
+        $config = array(array(
+            'firstdayofweek'    => get_string('firstdayofweek', 'langconfig'),
+            'mon'               => date_format_string(strtotime("Monday"), '%a', 99),
+            'tue'               => date_format_string(strtotime("Tuesday"), '%a', 99),
+            'wed'               => date_format_string(strtotime("Wednesday"), '%a', 99),
+            'thu'               => date_format_string(strtotime("Thursday"), '%a', 99),
+            'fri'               => date_format_string(strtotime("Friday"), '%a', 99),
+            'sat'               => date_format_string(strtotime("Saturday"), '%a', 99),
+            'sun'               => date_format_string(strtotime("Sunday"), '%a', 99),
+            'january'           => date_format_string(strtotime("January 1"), '%B', 99),
+            'february'          => date_format_string(strtotime("February 1"), '%B', 99),
+            'march'             => date_format_string(strtotime("March 1"), '%B', 99),
+            'april'             => date_format_string(strtotime("April 1"), '%B', 99),
+            'may'               => date_format_string(strtotime("May 1"), '%B', 99),
+            'june'              => date_format_string(strtotime("June 1"), '%B', 99),
+            'july'              => date_format_string(strtotime("July 1"), '%B', 99),
+            'august'            => date_format_string(strtotime("August 1"), '%B', 99),
+            'september'         => date_format_string(strtotime("September 1"), '%B', 99),
+            'october'           => date_format_string(strtotime("October 1"), '%B', 99),
+            'november'          => date_format_string(strtotime("November 1"), '%B', 99),
+            'december'          => date_format_string(strtotime("December 1"), '%B', 99)
+        ));
+        $PAGE->requires->yui_module($module, $function, $config);
+        $done = true;
+    }
+}
+//TDMU
+
 
 function scheduler_prepare_formdata($scheduler, $slot) {
     global $DB;
@@ -238,8 +273,14 @@ if ($action == 'addaperiodsession') {
 //    $("#getlistdates").val(listdates || "");
 //}';
 //        echo '</script>';
+     form_init_mycalendar_js();
+///    $config=null;
+///    $function =null;
+///        $module   = 'moodle-mod_scheduler-yui_cal1';
+    //    $function = 'M.mod_scheduler.yui_cal1.init_date_selectors';
+///    $PAGE->requires->yui_module($module, $function, $config);
 
-        
+    
     $actionurl = new moodle_url('/mod/scheduler/view.php',
                     array('what' => 'addaperiodsession', 'id' => $cm->id, 'page' => $page));
     $returnurl = new moodle_url('/mod/scheduler/view.php',
@@ -374,7 +415,7 @@ if ($action == 'schedulegroup') {
 
 /// print top tabs
 //    $PAGE->requires->js('/yui/yui_cal.js');//TDMU
-    $PAGE->requires->yui_module('moodle-mod_scheduler-yui_cal', 'M.mod_scheduler.yui_cal.init');
+ //   $PAGE->requires->yui_module('moodle-mod_scheduler-yui_cal', 'M.mod_scheduler.yui_cal.init');
     
 $tabrows = array();
 $row  = array();

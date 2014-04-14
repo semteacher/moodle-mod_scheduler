@@ -542,9 +542,15 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 //        $mform->addElement('html', '<div class="qheader">');
 
 //        $mform->addElement('html', '</script>');
-//        $mform->addElement('html', '<div id="multiInlinePicker"></div>');
-        
 
+        $mform->addElement('html', '<div id="mydateselector-calendar-content"></div>');
+//        $mform->addElement('html', '<div id="calContainer"></div>');
+        
+$dateg=array();
+$dateg[] =& $mform->createElement('text', 'datetext', get_string('datetext','module'));
+$dateg[] =& $mform->createElement('button', 'choosedate', get_string('choosedate','module'),array("onClick" =>"datePickerShow('id_datetext');"));
+$mform->addGroup($dateg, 'choosedate', get_string('choosedate','module'), array(' '), false);
+$mform->setDefault('datetext', 'xxxx');
         
         // Start and end time
         $hours = array();
