@@ -1,4 +1,4 @@
-﻿YUI().use("yui2-calendar", function(Y)
+﻿YUI().use("moodle-mod_scheduler-yui_cal", function(Y)
 {
 //  var YAHOO = Y.YUI2;
 //  var cal = new YAHOO.widget.Calendar("calContainer");
@@ -6,7 +6,7 @@
 M.mod_scheduler = M.mod_scheduler || {};
 M.mod_scheduler.init_yui_cal = function() {
   var YAHOO = Y.YUI2;
-  var cal = new YAHOO.widget.Calendar("calContainer");
+  var cal = new YAHOO.widget.Calendar(document.getElementById('calContainer'));
   cal.render();
  //   Y.delegate('click', function(e) {
         // Alert users when they've clicked on some fruit to tell them the obvious.

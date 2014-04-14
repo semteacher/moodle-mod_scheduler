@@ -273,12 +273,12 @@ if ($action == 'addaperiodsession') {
 //    $("#getlistdates").val(listdates || "");
 //}';
 //        echo '</script>';
-     form_init_mycalendar_js();
-///    $config=null;
-///    $function =null;
-///        $module   = 'moodle-mod_scheduler-yui_cal1';
+////////////     form_init_mycalendar_js();
+    $config=array();
+    $function ='M.mod_scheduler.init_yui_cal';
+    $module   = 'moodle-mod_scheduler-yui_cal';
     //    $function = 'M.mod_scheduler.yui_cal1.init_date_selectors';
-///    $PAGE->requires->yui_module($module, $function, $config);
+    $PAGE->requires->yui_module($module, $function, $config);
 
     
     $actionurl = new moodle_url('/mod/scheduler/view.php',
