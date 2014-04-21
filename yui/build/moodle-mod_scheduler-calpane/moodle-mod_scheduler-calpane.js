@@ -5,12 +5,14 @@ M.mod_scheduler.calpane = {
   init: function() {
    //next -work ok
     Y.one('#calContainer').set('innerHTML', 'Example content');
-   //next not work
+   //next work
+   Y.CalendarBase.CONTENT_TEMPLATE = Y.CalendarBase.TWO_PANE_TEMPLATE;
     var calend = new Y.Calendar({
       contentBox: "#calContainer2",
-      width:'340px',
+      width:'700px',
       showPrevMonth: true,
       showNextMonth: true,
+      selectionMode: 'multiple',
       date: new Date()}).render();
     var dtdate = Y.DataType.Date;
 
