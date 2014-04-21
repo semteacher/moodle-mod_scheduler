@@ -255,31 +255,12 @@ if ($action == 'addaperiodsession') {
         $listdates = "";
         $rangestart = time();
 
-//        echo '<style type="text/css">@import "'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.css";</style>';
-//       echo '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>';
-//        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.js"></script>';
-//        echo '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.lang.js"></script>';
-//        echo '<script type="text/javascript">';
-//        echo '$(function(){
-//    $.datepick.setDefaults($.datepick.regional['.$courselang.']);
-//	$("#multiInlinePicker").datepick({showTrigger: "#calImg", dateFormat: $.datepick.TIMESTAMP, multiSelect: 999, monthsToShow: 4, monthsToStep: 4, minDate: '.$rangestart.'});});';
-//        echo 'function getMultipleDates()
-//{
-//var listdates1 = $("#multiInlinePicker").datepick("getDate");
-//    var listdates = ""; 
-//    for (var i = 0; i < listdates1.length; i++) { 
-//        listdates += (i == 0 ? "" : ",") + $.datepick.formatDate("yyyy-mm-dd", listdates1[i]); 
-//		}
-//    $("#getlistdates").val(listdates || "");
-//}';
-//        echo '</script>';
 ////////////     form_init_mycalendar_js();
     $config=array();
     $function ='M.mod_scheduler.calpane.init';
     $module   = 'moodle-mod_scheduler-calpane';
     //    $function = 'M.mod_scheduler.yui_cal1.init_date_selectors';
     $PAGE->requires->yui_module($module, $function, $config);
-
     
     $actionurl = new moodle_url('/mod/scheduler/view.php',
                     array('what' => 'addaperiodsession', 'id' => $cm->id, 'page' => $page));

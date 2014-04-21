@@ -521,27 +521,6 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         $mform->addElement('hidden', 'rangestart', $rangestart);
         $mform->addElement('hidden', 'getlistdates', $listdates);
         
-     //   $mform->addElement('html', '<style type="text/css">@import "'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.css";</style>');
-     //   $mform->addElement('html', '<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.4/jquery.min.js"></script>');
-    //    $mform->addElement('html', '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.js"></script>');
-    //    $mform->addElement('html', '<script type="text/javascript" src="'.$CFG->wwwroot.'/mod/scheduler/scripts/jquerydatepick406/jquery.datepick.lang.js"></script>');
-    //    $mform->addElement('html', '<script type="text/javascript">');
-    //    $mform->addElement('html', '$(function(){
-  //  $.datepick.setDefaults($.datepick.regional['.$courselang.']);
-//	$("#multiInlinePicker").datepick({showTrigger: "#calImg", dateFormat: $.datepick.TIMESTAMP, multiSelect: 999, monthsToShow: 4, monthsToStep: 4, minDate: '.$rangestart.'});});');
-//        $mform->addElement('html', 'function getMultipleDates()
-//{
-//var listdates1 = $("#multiInlinePicker").datepick("getDate");
-//    var listdates = ""; 
-//    for (var i = 0; i < listdates1.length; i++) { 
-//        listdates += (i == 0 ? "" : ",") + $.datepick.formatDate("yyyy-mm-dd", listdates1[i]); 
-//		}
-//    $("#getlistdates").val(listdates || "");
-//}');
-
-//        $mform->addElement('html', '<div class="qheader">');
-
-//        $mform->addElement('html', '</script>');
 
 /////        $mform->addElement('html', '<div id="mydateselector-calendar-content"></div>');
 
