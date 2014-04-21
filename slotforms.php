@@ -546,7 +546,8 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 /////        $mform->addElement('html', '<div id="mydateselector-calendar-content"></div>');
 
         $mform->addElement('html', '<div id="calContainer"><p>ttttt</p></div>');
-        
+        $mform->addElement('html', '<div id="calContainer2"><p>rrr</p></div>');
+        $mform->addElement('html', '<div id="myselecteddate"><p>nope</p></div>');
 //$dateg=array();
 //$dateg[] =& $mform->createElement('text', 'datetext', get_string('datetext','module'));
 //$dateg[] =& $mform->createElement('button', 'choosedate', get_string('choosedate','module'),array("onClick" =>"datePickerShow('id_datetext');"));
