@@ -2,9 +2,9 @@ M.mod_scheduler = M.mod_scheduler || {};
 M.mod_scheduler.calpane = {
   init: function() {
    //next -work ok
-    Y.one('#calContainer').set('innerHTML', 'Example content');
+//    Y.one('#calContainer').set('innerHTML', 'Example content');
    //next work
-   Y.CalendarBase.CONTENT_TEMPLATE = Y.CalendarBase.TWO_PANE_TEMPLATE;
+    Y.CalendarBase.CONTENT_TEMPLATE = Y.CalendarBase.TWO_PANE_TEMPLATE;
     var calend = new Y.Calendar({
       contentBox: "#calContainer2",
       width:'700px',
@@ -15,21 +15,23 @@ M.mod_scheduler.calpane = {
     var dtdate = Y.DataType.Date;
 
         // Listen to calendar's selectionChange event.
-    calend.on("selectionChange", function (ev) {
+  calend.on("selectionChange", function (ev) {
 
-//        var listdates = ""; 
-//    for (var i = 0; i < ev.newSelection.length; i++) { 
-//        listdates += (i == 0 ? "" : ",") + $.datepick.formatDate("yyyy-mm-dd", listdates1[i]); 
-//		}
+    var listdates = "";
+    for (var i = 0; i < ev.newSelection.length; i++) {
+    
+        listdates += (i === 0 ? "" : ",") + dtdate.format(ev.newSelection[i]);
+		}
       // Get the date from the list of selected
       // dates returned with the event (since only
       // single selection is enabled by default,
       // we expect there to be only one date)
-      var newDate = ev.newSelection[0];
+/////      var newDate = ev.newSelection[0];
 
       // Format the date and output it to a DOM
       // element.
-      Y.one("#myselecteddate").setHTML(dtdate.format(newDate));
+/////      Y.one("#myselecteddate").setHTML(dtdate.format(newDate));
+    Y.one("#myselecteddate").setHTML(listdates);
     });
   }
 };
