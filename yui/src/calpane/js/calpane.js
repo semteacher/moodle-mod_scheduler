@@ -18,9 +18,11 @@ M.mod_scheduler.calpane = {
   calend.on("selectionChange", function (ev) {
 
     var listdates = "";
+    var listdates2 = "";
     for (var i = 0; i < ev.newSelection.length; i++) {
     
         listdates += (i === 0 ? "" : ",") + dtdate.format(ev.newSelection[i]);
+        listdates2 += (i === 0 ? "" : ",") + '{"id":'+ i +',"value":"'+ dtdate.format(ev.newSelection[i])+'"}';
 		}
       // Get the date from the list of selected
       // dates returned with the event (since only
@@ -32,7 +34,7 @@ M.mod_scheduler.calpane = {
       // element.
 /////      Y.one("#myselecteddate").setHTML(dtdate.format(newDate));
     Y.one("#myselecteddate").setHTML(listdates);
-    Y.one("#id_listdates").set('value', listdates);
+    Y.one("#id_listdates").set('value', listdates2);
     });
   }
 };
