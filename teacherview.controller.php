@@ -115,7 +115,7 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
 
     $data = (object) $formdata;
 
-    $fordays = (($data->rangeend - $data->rangestart) / DAYSECS);
+//    $fordays = (($data->rangeend - $data->rangestart) / DAYSECS);
 
     // Create as many slots of $duration on the given dates list $listdates and that do not conflict.
     $countslots = 0;
@@ -146,17 +146,15 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
         if ($data->timestart > $data->timeend){
             $data->timeend += DAYSECS;
         }
-        if ($data->displayfrom == 'now'){
+        if ($data->hideuntilrel == 0) {
             $slot->hideuntil = time();
-        } 
-        else {
-            $slot->hideuntil = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 6, 0) - $data->displayfrom;
+        } else {
+            $slot->hideuntil = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 6, 0) - $data->hideuntilrel;
         }
-        if ($data->emailfrom == 'never'){
+        if ($data->emaildaterel == -1) {
             $slot->emaildate = 0;
-        } 
-        else {
-            $slot->emaildate = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 0, 0) - $data->emailfrom;
+        } else {
+            $slot->emaildate = make_timestamp($eventdate['year'], $eventdate['mon'], $eventdate['mday'], 0, 0) - $data->emaildaterel;
         }
                 
         while ($slot->starttime <= $data->timeend - $data->duration * 60) {

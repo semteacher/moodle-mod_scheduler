@@ -527,6 +527,8 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         $mform->addElement('html', '<div id="calContainer"><p>ttttt</p></div>');
         $mform->addElement('html', '<div id="calContainer2"><p>rrr</p></div>');
         $mform->addElement('html', '<div id="myselecteddate"><p>nope</p></div>');
+/////////        $mform->addElement('html', '<div id="id_listdates"><p>nope</p></div>');
+        $mform->addElement('text', 'listdates', 'listdates', array('size'=>'50'));
 //$dateg=array();
 //$dateg[] =& $mform->createElement('text', 'datetext', get_string('datetext','module'));
 //$dateg[] =& $mform->createElement('button', 'choosedate', get_string('choosedate','module'),array("onClick" =>"datePickerShow('id_datetext');"));
@@ -605,10 +607,10 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         $errors = parent::validation($data, $files);
 
         // Range is negative
-        $fordays = ($data['rangeend'] - $data['rangestart']) / DAYSECS;
-        if ($fordays < 0) {
-            $errors['rangeend'] = get_string('negativerange', 'scheduler');
-        }
+//        $fordays = ($data['rangeend'] - $data['rangestart']) / DAYSECS;
+//        if ($fordays < 0) {
+//            $errors['rangeend'] = get_string('negativerange', 'scheduler');
+//        }
 
         // Time range is negative
         $starttime = $data['starthour']*60+$data['startminute'];

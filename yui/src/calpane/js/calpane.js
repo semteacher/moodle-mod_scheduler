@@ -32,6 +32,7 @@ M.mod_scheduler.calpane = {
       // element.
 /////      Y.one("#myselecteddate").setHTML(dtdate.format(newDate));
     Y.one("#myselecteddate").setHTML(listdates);
+    Y.one("#id_listdates").set('value', listdates);
     });
   }
 };

@@ -213,7 +213,9 @@ if ($action == 'updateslot') {
 
     if ($mform->is_cancelled()) {
         redirect($returnurl);
-    } else if ($formdata = $mform->get_data()) {
+    } else 
+    {
+    if ($formdata = $mform->get_data()) {
         scheduler_save_slotform ($scheduler, $course, $slotid, $formdata);
         echo $OUTPUT->heading(get_string('slotupdated', 'scheduler'));
     } else {
@@ -221,6 +223,7 @@ if ($action == 'updateslot') {
         $mform->display();
         echo $OUTPUT->footer($course);
         die;
+    }
     }
 
 }
@@ -252,8 +255,8 @@ if ($action == 'addaperiodsession') {
         if ($courselang == 'en'){
             $courselang = '';
         }
-        $listdates = "";
-        $rangestart = time();
+//        $listdates = "";
+//        $rangestart = time();
 
 ////////////     form_init_mycalendar_js();
     $config=array();
@@ -271,13 +274,15 @@ if ($action == 'addaperiodsession') {
 
     if ($mform->is_cancelled()) {
         redirect($returnurl);
-    } else if ($formdata = $mform->get_data()) {
+    } else {
+    if ($formdata = $mform->get_data()) {
         scheduler_action_doaddaperiodsession($scheduler, $formdata);
     } else {
         echo $OUTPUT->heading(get_string('addaperiodsession', 'scheduler'));
         $mform->display();
         echo $OUTPUT->footer($course);
         die;
+    }
     }
 }
 /************************************ Schedule a student form ***********************************************/
