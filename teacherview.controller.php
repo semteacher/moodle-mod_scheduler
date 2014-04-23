@@ -181,7 +181,8 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
                 if (!$data->forcewhenoverlap){
                     print_string('conflictingslots', 'scheduler');
                     echo '<ul>';
-                    foreach ($conflicts as $aConflict){
+                    foreach ($conflicts as $aconflict){
+                        $conflictinfo = scheduler_get_courseinfobyslotid($aconflict->id);//TDMU
                         $msg = userdate($conflictinfo->starttime) . ' ' . usertime($conflictinfo->starttime) . ' ' . get_string('incourse', 'scheduler') . ': ';
                         $msg .= $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
                         echo html_writer::tag('li', $msg);

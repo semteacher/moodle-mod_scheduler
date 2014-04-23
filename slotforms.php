@@ -510,31 +510,21 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 //        $mform->addElement('advcheckbox', 'saturday', '', get_string('saturday', 'scheduler'));
 //        $mform->addElement('advcheckbox', 'sunday', '', get_string('sunday', 'scheduler'));
         
-        //TODO: insert datepicker there
+        //TODO: remove? it was the jquery localization option
         $courselang = substr($COURSE->lang, 0, 2); 
         if ($courselang == 'en'){
             $courselang = '';
         }
-        $listdates = "";
-        $rangestart = time();
         
-        $mform->addElement('hidden', 'rangestart', $rangestart);
+        $listdates = "";
+//        $rangestart = time();
+        
+//        $mform->addElement('hidden', 'rangestart', $rangestart);
         $mform->addElement('hidden', 'getlistdates', $listdates);
         
+        $mform->addElement('html', '<div id="calContainer2"><p>Select dates:</p></div>');
+        $mform->addElement('text', 'listdates', 'listdates', array('size'=>'50'));       
 
-/////        $mform->addElement('html', '<div id="mydateselector-calendar-content"></div>');
-
-        $mform->addElement('html', '<div id="calContainer"><p>ttttt</p></div>');
-        $mform->addElement('html', '<div id="calContainer2"><p>rrr</p></div>');
-        $mform->addElement('html', '<div id="myselecteddate"><p>nope</p></div>');
-/////////        $mform->addElement('html', '<div id="id_listdates"><p>nope</p></div>');
-        $mform->addElement('text', 'listdates', 'listdates', array('size'=>'50'));
-//$dateg=array();
-//$dateg[] =& $mform->createElement('text', 'datetext', get_string('datetext','module'));
-//$dateg[] =& $mform->createElement('button', 'choosedate', get_string('choosedate','module'),array("onClick" =>"datePickerShow('id_datetext');"));
-//$mform->addGroup($dateg, 'choosedate', get_string('choosedate','module'), array(' '), false);
-//$mform->setDefault('datetext', 'xxxx');
-        
         // Start and end time
         $hours = array();
         $minutes = array();
