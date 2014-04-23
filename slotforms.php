@@ -522,7 +522,7 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 //        $mform->addElement('hidden', 'rangestart', $rangestart);
         $mform->addElement('hidden', 'getlistdates', $listdates);
         
-        $mform->addElement('html', '<div id="calContainer2"><p>Select dates:</p></div>');
+        $mform->addElement('html', '<div id="calContainer"><p>Select dates:</p></div>');
         $mform->addElement('text', 'listdates', 'listdates', array('size'=>'50'));       
 
         // Start and end time
