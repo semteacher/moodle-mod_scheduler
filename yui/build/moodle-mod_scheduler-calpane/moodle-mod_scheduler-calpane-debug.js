@@ -20,12 +20,13 @@ M.mod_scheduler.calpane = {
   calend.on("selectionChange", function (ev) {
 
     var listdates = "";
-    var listdates2 = "";
+    var listdates2 = '[{';
     for (var i = 0; i < ev.newSelection.length; i++) {
     
         listdates += (i === 0 ? "" : ",") + dtdate.format(ev.newSelection[i]);
-        listdates2 += (i === 0 ? "" : ",") + '{"id":'+ i +',"value":"'+ dtdate.format(ev.newSelection[i])+'"}';
+        listdates2 += (i === 0 ? "" : ",") + '"'+ i +'":"'+ dtdate.format(ev.newSelection[i])+'"';
 		}
+    listdates2 += "}]";
       // Get the date from the list of selected
       // dates returned with the event (since only
       // single selection is enabled by default,

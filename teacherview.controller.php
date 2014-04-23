@@ -120,8 +120,8 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
     // Create as many slots of $duration on the given dates list $listdates and that do not conflict.
     $countslots = 0;
     $couldnotcreateslots = '';
-    $startfrom = $data->rangestart+($data->starthour*60+$data->startminute)*60;
-    $endat = $data->rangestart+($data->endhour*60+$data->endminute)*60;
+//    $startfrom = $data->rangestart+($data->starthour*60+$data->startminute)*60;
+//    $endat = $data->rangestart+($data->endhour*60+$data->endminute)*60;
     $slot = new stdClass();
     $slot->schedulerid = $scheduler->id;
     $slot->teacherid = $data->teacherid;
@@ -133,10 +133,17 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
     $slot->notesformat = FORMAT_HTML;
     $slot->timemodified = time();
 
-	for ($d = 0; $d <= count($data->listdates)-1; $d ++){
-        $year = date("Y", strtotime($data->listdates[$d]));
-        $month = date("m", strtotime($data->listdates[$d]));
-        $day = date("d", strtotime($data->listdates[$d]));
+//	$listdatesarr = array();
+    $listdatesarr = json_decode($data->listdates, true);
+    
+//    for ($d = 0; $d <= count($data->listdates)-1; $d ++){
+//        $year = date("Y", strtotime($data->listdates[$d]));
+//        $month = date("m", strtotime($data->listdates[$d]));
+//        $day = date("d", strtotime($data->listdates[$d]));
+    for ($d = 0; $d <= count($listdatesarr[0])-1; $d ++){
+        $year = date("Y", strtotime($listdatesarr[0][$d]));
+        $month = date("m", strtotime($listdatesarr[0][$d]));
+        $day = date("d", strtotime($listdatesarr[0][$d]));
         $slot->starttime = make_timestamp($year, $month, $day, $data->starthour, $data->startminute);
         $eventdate = usergetdate($slot->starttime);
         $data->timestart = $slot->starttime;
