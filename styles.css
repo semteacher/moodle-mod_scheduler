@@ -33,3 +33,7 @@ div .path-mod-scheduler .appointmentnote{
    border-color: white;
    border-width: 2px 10px;
 }
+
+.path-mod-scheduler .yui3-skin-sam .redtext {
+  color:#ff0000;
+}

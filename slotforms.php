@@ -521,9 +521,10 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         
 //        $mform->addElement('hidden', 'rangestart', $rangestart);
         $mform->addElement('hidden', 'getlistdates', $listdates);
-        
+        // Define Calendar panel
+        $mform->addElement('html', '<div id="calendar" class="yui3-skin-sam">');
         $mform->addElement('html', '<div id="calContainer"></div>');     
-
+        $mform->addElement('html', '</div>');
         // Start and end time
         $hours = array();
         $minutes = array();
