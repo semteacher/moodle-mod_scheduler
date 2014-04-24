@@ -511,10 +511,10 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 //        $mform->addElement('advcheckbox', 'sunday', '', get_string('sunday', 'scheduler'));
         
         //TODO: remove? it was the jquery localization option
-        $courselang = substr($COURSE->lang, 0, 2); 
-        if ($courselang == 'en'){
-            $courselang = '';
-        }
+//        $courselang = substr($COURSE->lang, 0, 2); 
+//        if ($courselang == 'en'){
+//            $courselang = '';
+//        }
         
         $listdates = "";
 //        $rangestart = time();

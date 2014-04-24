@@ -217,9 +217,9 @@ if ($action == 'addsession') {
 if ($action == 'addaperiodsession') {
         //TODO: remove? it was the jquery localization option
         $courselang = substr($COURSE->lang, 0, 2); 
-        if ($courselang == 'en'){
-            $courselang = '';
-        }
+//        if ($courselang == 'en'){
+//            $courselang = '';
+//        }
 
     //prepare URLs
     $actionurl = new moodle_url('/mod/scheduler/view.php',
@@ -235,7 +235,7 @@ if ($action == 'addaperiodsession') {
         scheduler_action_doaddaperiodsession($scheduler, $formdata);
     } else {
         //prepare and load the YUI module
-        $calconfig=array();
+        $calconfig=array($courselang);
         $calfunction ='M.mod_scheduler.calpane.init';
         $calmodule   = 'moodle-mod_scheduler-calpane';
         $PAGE->requires->yui_module($calmodule, $calfunction, $calconfig);    

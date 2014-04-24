@@ -2,14 +2,20 @@ YUI.add('moodle-mod_scheduler-calpane', function (Y, NAME) {
 
 M.mod_scheduler = M.mod_scheduler || {};
 M.mod_scheduler.calpane = {
-  init: function() {
+  init: function(langconf) {
     Y.Intl.add("datatype-date-format", "uk-UK", {
         "a":["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],
         "A":["Неділя","Понеділок","Вівторк","Середа","Четвер","П'ятниця","Субота"],
         "B":["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
     });
+//    Y.Intl.add("datatype-date-format", "ru-RU", {
+//        "a":["Вс","Пн","Вт","Ср","Чт","Пт","Сб"],
+//        "A":["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"],
+//        "B":["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"]
+//    });
     Y.CalendarBase.CONTENT_TEMPLATE = Y.CalendarBase.THREE_PANE_TEMPLATE;
     // Setup basic calendar parameters
+    var availLangs = Y.Intl.getAvailableLangs("datatype-date-format");
     var calend = new Y.Calendar({
         contentBox: "#calContainer",
         width:'750px',
@@ -20,7 +26,15 @@ M.mod_scheduler.calpane = {
         date: new Date()});
     //Localization
     //not working   Y.Intl.setLang("calendar.strings.very_short_weekdays", "uk-UK");
-    calend.set("strings.very_short_weekdays", ["Нд","Пн","Вт","Ср","Чт","Пт","Сб"]);
+    if (langconf === "uk") {
+        calend.set("strings.very_short_weekdays", ["Нд","Пн","Вт","Ср","Чт","Пт","Сб"]);
+        Y.Intl.setLang("datatype-date-format", "uk-UK");
+    } else if (langconf === "ru") {
+        calend.set("strings.very_short_weekdays", ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]);
+        Y.Intl.setLang("datatype-date-format", "ru");
+    } else {
+        Y.Intl.setLang("datatype-date-format", "en");
+    }
     // Draw calendar instance
     calend.render();
     // Create a set of rules to match specific dates. In this case,
@@ -47,7 +61,13 @@ M.mod_scheduler.calpane = {
     // which receives the current date and outputs a string.
     calend.set("headerRenderer", function (curDate) {
         // Localization
-        Y.Intl.setLang("datatype-date-format", "uk-UK");
+        if (langconf === "uk") {
+            Y.Intl.setLang("datatype-date-format", "uk-UK");
+        } else if (langconf === "ru") {
+            Y.Intl.setLang("datatype-date-format", "ru");
+        } else {
+            Y.Intl.setLang("datatype-date-format", "en");
+        }
         var ydate = Y.DataType.Date,
             output = ydate.format(curDate, {
                 format: "%B %Y"
