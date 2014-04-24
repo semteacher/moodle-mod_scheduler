@@ -522,8 +522,7 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
 //        $mform->addElement('hidden', 'rangestart', $rangestart);
         $mform->addElement('hidden', 'getlistdates', $listdates);
         
-        $mform->addElement('html', '<div id="calContainer"><p>Select dates:</p></div>');
-        $mform->addElement('text', 'listdates', 'listdates', array('size'=>'50'));       
+        $mform->addElement('html', '<div id="calContainer"></div>');     
 
         // Start and end time
         $hours = array();
@@ -609,10 +608,10 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
             $errors['endtime'] = get_string('negativerange', 'scheduler');
         }
 
-        // First slot is in the past
-        if ($data['rangestart'] < time() - DAYSECS) {
-            $errors['rangestart'] = get_string('startpast', 'scheduler');
-        }
+        //TODO: need one more field to pass this: First slot is in the past
+//        if ($data['rangestart'] < time() - DAYSECS) {
+//            $errors['rangestart'] = get_string('startpast', 'scheduler');
+//        }
 
         // Break must be nonnegative
         if ($data['break'] < 0) {

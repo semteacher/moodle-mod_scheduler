@@ -33,10 +33,9 @@ M.mod_scheduler.calpane = {
             listdates += (i === 0 ? "" : ",") + '"'+ i +'":"'+ dtdate.format(ev.newSelection[i])+'"';
 		}
         listdates += "}]";
-/////      Y.one("#myselecteddate").setHTML(dtdate.format(newDate));
         //set dates to HTML control
-        Y.one("#id_listdates").set('value', listdates);
-        Y.one(document.getElementsByName('getlistdates')[0]).setHTML(listdates);
+////        Y.one("#id_listdates").set('value', listdates);
+        Y.one(document.getElementsByName('getlistdates')[0]).set('value', listdates);
     });
   }
 };

@@ -133,13 +133,9 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
     $slot->notesformat = FORMAT_HTML;
     $slot->timemodified = time();
 
-//	$listdatesarr = array();
-    $listdatesarr = json_decode($data->listdates, true);
+///    $listdatesarr = json_decode($data->listdates, true);
+    $listdatesarr = json_decode($data->getlistdates, true);
     
-//    for ($d = 0; $d <= count($data->listdates)-1; $d ++){
-//        $year = date("Y", strtotime($data->listdates[$d]));
-//        $month = date("m", strtotime($data->listdates[$d]));
-//        $day = date("d", strtotime($data->listdates[$d]));
     for ($d = 0; $d <= count($listdatesarr[0])-1; $d ++){
         $year = date("Y", strtotime($listdatesarr[0][$d]));
         $month = date("m", strtotime($listdatesarr[0][$d]));
