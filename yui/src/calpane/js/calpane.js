@@ -35,6 +35,10 @@ M.mod_scheduler.calpane = {
     // Set a custom header renderer with a callback function,
     // which receives the current date and outputs a string.
     calend.set("headerRenderer", function (curDate) {
+    Y.Intl.add("datatype-date-format", "uk-UK", {
+        "B":["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
+    });
+    Y.Intl.setLang("datatype-date-format", "uk-UK");
         var ydate = Y.DataType.Date,
             output = ydate.format(curDate, {
                 format: "%B %Y"
