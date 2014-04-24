@@ -13,7 +13,6 @@ M.mod_scheduler.calpane = {
 //    });
     Y.CalendarBase.CONTENT_TEMPLATE = Y.CalendarBase.THREE_PANE_TEMPLATE;
     // Setup basic calendar parameters
-    var availLangs = Y.Intl.getAvailableLangs("datatype-date-format");
     var calend = new Y.Calendar({
         contentBox: "#calContainer",
         width:'750px',
@@ -23,15 +22,12 @@ M.mod_scheduler.calpane = {
         minimumDate: new Date(),
         date: new Date()});
     //Localization
-    //not working   Y.Intl.setLang("calendar.strings.very_short_weekdays", "uk-UK");
     if (langconf === "uk") {
         calend.set("strings.very_short_weekdays", ["Нд","Пн","Вт","Ср","Чт","Пт","Сб"]);
         Y.Intl.setLang("datatype-date-format", "uk-UK");
     } else if (langconf === "ru") {
         calend.set("strings.very_short_weekdays", ["Вс","Пн","Вт","Ср","Чт","Пт","Сб"]);
-        Y.Intl.setLang("datatype-date-format", "ru");
-    } else {
-        Y.Intl.setLang("datatype-date-format", "en");
+        Y.Intl.setLang("datatype-date-format", "ru");//not working
     }
     // Draw calendar instance
     calend.render();
@@ -58,14 +54,6 @@ M.mod_scheduler.calpane = {
     // Set a custom header renderer with a callback function,
     // which receives the current date and outputs a string.
     calend.set("headerRenderer", function (curDate) {
-        // Localization
-        if (langconf === "uk") {
-            Y.Intl.setLang("datatype-date-format", "uk-UK");
-        } else if (langconf === "ru") {
-            Y.Intl.setLang("datatype-date-format", "ru");
-        } else {
-            Y.Intl.setLang("datatype-date-format", "en");
-        }
         var ydate = Y.DataType.Date,
             output = ydate.format(curDate, {
                 format: "%B %Y"
