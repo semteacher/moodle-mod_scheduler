@@ -1,8 +1,13 @@
 M.mod_scheduler = M.mod_scheduler || {};
 M.mod_scheduler.calpane = {
   init: function() {
+    Y.Intl.add("datatype-date-format", "uk-UK", {
+        "a":["Нд","Пн","Вт","Ср","Чт","Пт","Сб"],
+        "A":["Неділя","Понеділок","Вівторк","Середа","Четвер","П'ятниця","Субота"],
+        "B":["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
+    });
     Y.CalendarBase.CONTENT_TEMPLATE = Y.CalendarBase.THREE_PANE_TEMPLATE;
-    // Setup basic parameters and draw calendar instance
+    // Setup basic calendar parameters
     var calend = new Y.Calendar({
         contentBox: "#calContainer",
         width:'750px',
@@ -10,8 +15,12 @@ M.mod_scheduler.calpane = {
         showNextMonth: true,
         selectionMode: 'multiple-sticky',
         minimumDate: new Date(),
-        date: new Date()}).render();
-    var dtdate = Y.DataType.Date;
+        date: new Date()});
+    //Localization
+    //not working   Y.Intl.setLang("calendar.strings.very_short_weekdays", "uk-UK");
+    calend.set("strings.very_short_weekdays", ["Нд","Пн","Вт","Ср","Чт","Пт","Сб"]);
+    // Draw calendar instance
+    calend.render();
     // Create a set of rules to match specific dates. In this case,
     // the "all_weekends" rule will match any Saturday or Sunday.
     var rules = {
@@ -35,10 +44,8 @@ M.mod_scheduler.calpane = {
     // Set a custom header renderer with a callback function,
     // which receives the current date and outputs a string.
     calend.set("headerRenderer", function (curDate) {
-    Y.Intl.add("datatype-date-format", "uk-UK", {
-        "B":["Січень","Лютий","Березень","Квітень","Травень","Червень","Липень","Серпень","Вересень","Жовтень","Листопад","Грудень"]
-    });
-    Y.Intl.setLang("datatype-date-format", "uk-UK");
+        // Localization
+        Y.Intl.setLang("datatype-date-format", "uk-UK");
         var ydate = Y.DataType.Date,
             output = ydate.format(curDate, {
                 format: "%B %Y"
@@ -51,14 +58,14 @@ M.mod_scheduler.calpane = {
     });
     // Listen to calendar's selectionChange event.
     calend.on("selectionChange", function (ev) {
-        //collect dates from selection
+        var dtdate = Y.DataType.Date;
         var listdates = '[{';
+        // Collect dates from selection
         for (var i = 0; i < ev.newSelection.length; i++) {
             listdates += (i === 0 ? "" : ",") + '"'+ i +'":"'+ dtdate.format(ev.newSelection[i])+'"';
 		}
         listdates += "}]";
         //set dates to HTML control
-////        Y.one("#id_listdates").set('value', listdates);
         Y.one(document.getElementsByName('getlistdates')[0]).set('value', listdates);
     });
   }
