@@ -101,8 +101,8 @@ if ($action == 'savechoice') {
     /// cleans up old slots if not attended (attended are definitive results, with grades)
     $sql = "
         SELECT 
-        s.*,
-        a.id as appointmentid
+        a.id as appointmentid,
+        s.*
         FROM 
         {scheduler_slots} AS s,
         {scheduler_appointment} AS a 
@@ -177,6 +177,7 @@ if ($action == 'savechoice') {
 }
 // *********************************** Disengage alone from the slot ******************************/
 if ($action == 'disengage') {
+	require_capability( 'mod/scheduler:disengage', $context);
     $where = 'studentid = :studentid AND attended = 0 AND ' .
              'EXISTS(SELECT 1 FROM {scheduler_slots} sl WHERE sl.id = slotid AND sl.schedulerid = :scheduler )';
     $params = array('scheduler'=>$scheduler->id, 'studentid'=>$USER->id);
