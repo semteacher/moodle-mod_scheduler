@@ -166,7 +166,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2012102903, 'scheduler');
     }
     
-    if ($oldversion < 2012110700) {
+    if ($oldversion < 2013110700) {
     
         $dbman = $DB->get_manager();
     
@@ -179,10 +179,10 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         }
 
         // savepoint reached
-        upgrade_mod_savepoint(true, 2012110700, 'scheduler');
+        upgrade_mod_savepoint(true, 2013110700, 'scheduler');
     }
 
-    if ($oldversion < 2012111500) {
+    if ($oldversion < 2013111500) {
     
         $dbman = $DB->get_manager();
         
@@ -204,7 +204,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         }       
         //$result = $result && add_field($table, $field);
         // savepoint reached
-        upgrade_mod_savepoint(true, 2012111500, 'scheduler');
+        upgrade_mod_savepoint(true, 2013111500, 'scheduler');
         
     }
     
