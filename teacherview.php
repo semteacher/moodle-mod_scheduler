@@ -708,7 +708,7 @@ if (!$students) {
             $name .= '</a>';
             if (scheduler_has_slot($student->id, $scheduler, true, false) == 0){
                 // student has never scheduled
-                $mailto .= $student->email.', ';
+                $mailto .= $student->email.',%20';
                 $maillist[] = $student->email; // constructing list of email addresses to be shown later
             }
 
@@ -753,7 +753,7 @@ if (!$students) {
         // Print links to print invitation or reminder emails
         $strinvitation = get_string('invitation', 'scheduler');
         $strreminder = get_string('reminder', 'scheduler');
-        $mailto = rtrim($mailto, ', ');
+        $mailto = rtrim($mailto, ',%20');
 
         $subject = $strinvitation . ': ' . $scheduler->name;
         $body = $strinvitation . ': ' . $scheduler->name . "\n\n";
@@ -802,7 +802,7 @@ if (!$students) {
 	$mtable->head  = array ('', $strname, $straction);
 	$mtable->align = array ('CENTER', 'LEFT', 'CENTER');
 	foreach($groups as $group) {
-        $members = groups_get_members($group->id, 'u.id, lastname, firstname, email, picture', 'lastname, firstname');
+        $members = groups_get_members($group->id, user_picture::fields('u'), 'u.lastname, u.firstname');
         if (empty($members)) continue;
         if (!scheduler_has_slot(implode(',', array_keys($members)), $scheduler, true, $scheduler->schedulermode == 'onetime')) {
             $actions = '';
