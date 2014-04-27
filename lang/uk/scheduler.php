@@ -350,7 +350,7 @@ $string['email_applied_html'] = '<p>Запис на прийом був пров
 
 <p>{$a->course_short}: <a href="{$a->course_url}">{$a->course}</a></p>
 
-<p>з використання модулю розкладу під назвою "<i>{$a->module}</i>" на сайті: <a href="{$a->site_url}">{$a->site}</a>.</p>';
+<p>з використання модулю розкладу під назвою "<em>{$a->module}</em>" на сайті: <a href="{$a->site_url}">{$a->site}</a>.</p>';
 
 $string['email_cancelled_subject'] = '{$a->course_short}: Запис на прийом відмінено чи переміщено студентом';
 
@@ -363,14 +363,14 @@ $string['email_cancelled_plain'] = 'Ваш запис на прийом на  {$
 
 був відмінений чи перенесений.';
 
-$string['email_cancelled_html'] = '<p>Ваш запис на прийом на <b>{$a->date}</b> о <b>{$a->time}</b>,<br/> 
-з студентом <b><a href="{$a->attendee_url}">{$a->attendee}</a></b> на курсі:</p>
+$string['email_cancelled_html'] = '<p>Ваш запис на прийом на <strong>{$a->date}</strong> о <strong>{$a->time}</strong>,<br/> 
+з студентом <strong><a href="{$a->attendee_url}">{$a->attendee}</a></strong> на курсі:</p>
 
-<p><b>{$a->course_short} : <a href="{$a->course_url}">{$a->course}</a></b></p>
+<p><strong>{$a->course_short} : <a href="{$a->course_url}">{$a->course}</a></strong></p>
 
-<p>в модулі розкладу під назвою "<i>{$a->module}</i>" на сайті: <b><a href="{$a->site_url}">{$a->site}</a></b></p>
+<p>в модулі розкладу під назвою "<em>{$a->module}</em>" на сайті: <strong><a href="{$a->site_url}">{$a->site}</a></strong></p>
 
-<p><b><span style="color: red">був відмінений чи перенесений</span></b>.</p>';
+<p><strong><span style="color: red">був відмінений чи перенесений</span></strong>.</p>';
 
 $string['email_reminder_subject'] = '{$a->course_short}: Нагадування про запис на прийом';
 
@@ -380,11 +380,11 @@ $string['email_reminder_plain'] = 'Наближається час Вашого 
 
 Розміщення: {$a->location}';
 
-$string['email_reminder_html'] = '<p>Наближається час Вашого запису на прийом на <b>{$a->date}</b> 
-від <b>{$a->time}</b> до <b>{$a->endtime}</b><br/> 
-з <b><a href="{$a->attendant_url}">{$a->attendant}</a></b>.</p>
+$string['email_reminder_html'] = '<p>Наближається час Вашого запису на прийом на <strong>{$a->date}</strong> 
+від <strong>{$a->time}</strong> до <strong>{$a->endtime}</strong><br/> 
+з <strong><a href="{$a->attendant_url}">{$a->attendant}</a></strong>.</p>
 
-<p>Розміщення: <b>{$a->location}</b></p>';
+<p>Розміщення: <strong>{$a->location}</strong></p>';
 
 $string['email_teachercancelled_subject'] = '{$a->course_short}: Запис на прийом відмінено викладачем';
 
@@ -397,11 +397,11 @@ $string['email_teachercancelled_plain'] = 'Ваш запис на прийом �
 
 було відмнено. Будь-ласка, пошукайте інший інтервал.';
 
-$string['email_teachercancelled_html'] = '<p>Ваш запис на прийом на <b>{$a->date}</b> о <b>{$a->time} </b>,<br/> 
-з {$a->staffrole} <b><a href="{$a->attendant_url}">{$a->attendant}</a></b> на курсі:</p>
+$string['email_teachercancelled_html'] = '<p>Ваш запис на прийом на <strong>{$a->date}</strong> о <strong>{$a->time} </strong>,<br/> 
+з {$a->staffrole} <strong><a href="{$a->attendant_url}">{$a->attendant}</a></strong> на курсі:</p>
 
-<p><b>{$a->course_short}: <a href="{$a->course_url}">{$a->course}</a></b></p>
+<p><strong>{$a->course_short}: <a href="{$a->course_url}">{$a->course}</a></strong></p>
 
-<p>в модулі розкладу під назвою "<i>{$a->module}</i>" на сайті: <b><a href="{$a->site_url}">{$a->site}</a></b></p>
+<p>в модулі розкладу під назвою "<em>{$a->module}</em>" на сайті: <strong><a href="{$a->site_url}">{$a->site}</a></strong></p>
 
-<p><b><span style="color : red">було відмнено</span></b>. Будь-ласка, пошукайте інший інтервал.</p>';
+<p><strong><span style="color : red">було відмнено</span></strong>. Будь-ласка, пошукайте інший інтервал.</p>';
