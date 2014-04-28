@@ -127,20 +127,20 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2014032300, 'scheduler');
     }
 
-    if ($oldversion < 2014032400) {
+    if ($oldversion < 2014032500) {
     
-        $dbman = $DB->get_manager();
+        //$dbman = $DB->get_manager();
     
         /// Define field allowmulticourseappointment to be added to scheduler table	
         $table = new xmldb_table('scheduler');	
-        $field = new xmldb_field('allowmulticourseappointment', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'defaultslotduration');
+        $field = new xmldb_field('allowmulticourseappointment', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'defaultslotduration');
 
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
         // savepoint reached
-        upgrade_mod_savepoint(true, 2014032400, 'scheduler');
+        upgrade_mod_savepoint(true, 2014032500, 'scheduler');
     }
     
     return true;
