@@ -328,9 +328,9 @@ $string['multicoursesappointment'] = 'Setting appointments slots overlapping wit
 $string['multicoursesappointment_help']='
 <p>Teacher can customize a slot overlapping behaviour mode :</p>
 <p><ul>
-<li><b>"No" - default setting: </b>Slots overlapping never allowed. 
+<li><strong>"No" - default setting: </strong>Slots overlapping never allowed (Except "Ignore conflict" option).
 </li>
-<li><b>"Yes": </b> Slots overlapping are allowed only if overlapped slots are appointed in the scheduler models that are related to the different courses. Teacher can create overlapped slots in different courses. This mode is useful when teacher want to create schedule of the students missed class. <b>Note.</b> Existing exclusive or limited slots still has not been overlapped never. 
+<li><strong>"Yes": </strong> Slots overlapping are allowed only if overlapped slots are appointed in the scheduler models that are related to the different courses. Teacher can create overlapped slots in different courses. This mode is useful when teacher want to create schedule of the students missed class. <strong>Note.</strong> To overlap the existing exclusive slots still need setup "Ignore conflict" option for each. 
 </li>
 </ul>
 </p>';
