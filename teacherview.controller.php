@@ -91,7 +91,7 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
                         foreach ($conflicts as $aconflict) {
                             $conflictinfo = scheduler_get_courseinfobyslotid($aconflict->id);//TDMU
                             $msg = userdate($conflictinfo->starttime) . ' ' . usertime($conflictinfo->starttime) . ' ' . get_string('incourse', 'scheduler') . ': ';
-                            $msg .= $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
+                            $msg .= html_writer::link(new moodle_url('/course/view.php', array('id'=>$conflictinfo->id)), $conflictinfo->shortname . ' - ' . $conflictinfo->fullname);                            
                             echo html_writer::tag('li', $msg);
                         }
                         echo '</ul><br/>';

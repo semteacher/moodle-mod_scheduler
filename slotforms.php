@@ -284,7 +284,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                     $slotmsg .= ' [';
                     $slotmsg .= $conflict->duration.' '.get_string('minutes');
                     $slotmsg .= '] ';
-                    $slotmsg .= get_string('incourse', 'scheduler') . ': ' . $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
+                    $slotmsg .= get_string('incourse', 'scheduler') . ': ' . html_writer::link(new moodle_url('/course/view.php', array('id'=>$conflictinfo->id)), $conflictinfo->shortname . ' - ' . $conflictinfo->fullname);
 
                     if ($students) {
                         $slotmsg .= ' (';

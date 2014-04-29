@@ -95,13 +95,14 @@ function scheduler_get_courseinfobyslotid($slotid) {
 	
     $sql = "
        SELECT
+          c.id,
           c.fullname,
           c.shortname,
           sl.starttime
        FROM
-          {$CFG->prefix}course AS c,
-          {$CFG->prefix}scheduler AS s,
-          {$CFG->prefix}scheduler_slots AS sl
+          {course} c,
+          {scheduler} s,
+          {scheduler_slots} sl
        WHERE
           s.course = c.id AND
           sl.schedulerid = s.id AND
