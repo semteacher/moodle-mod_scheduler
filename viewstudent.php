@@ -160,7 +160,7 @@ if ($page == 'thisappointment') {
         if ($note) {
             $note .= '<br/><span class="timelabel">['.userdate($otherappointment->timemodified).']</span>';
         }
-        $table->data[] = array ($studentlink, $icon, $note, $otherslot->studentteachernotes, $grade);
+        $table->data[] = array ($studentlink, $icon, $note, $otherappointment->studentteachernotes, $grade);
     }
     echo html_writer::table($table);
 }

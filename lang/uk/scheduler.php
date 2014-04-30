@@ -120,8 +120,8 @@ $string['forcourses'] = 'Виберіть студентів на курсі';
 $string['friday'] = 'П\'ятниця';
 $string['generalconfig'] = 'Загальні налаштування';
 $string['grade'] = 'Оцінка';
-$string['getstudentsnotes'] = 'Слід вказати підстави для запису на прийом:'; // @TDMU
-$string['getstudentsnoteserr'] = '<strong>Примітки є обов"язковими!</strong> Зміни не будуть збережені. Спробуйте ще раз!'; // @TDMU
+$string['getstudentsnotes'] = 'Слід вказати підстави для запису на прийом:'; //@TDMU
+$string['getstudentsnoteserr'] = '<strong>Примітки є обов"язковими!</strong> Зміни не будуть збережені. Спробуйте ще раз!'; //@TDMU
 $string['gradingstrategy'] = 'Методика оцінювання';
 $string['gradingstrategy_help'] = 'Для розкладів в яких студенти можуть мати кілька записів, виберіть, яка оцінка буде остаточною. 
 В журналі оцінок може відображатися або <ul><li>середня оцінка або</li><li>максимальна оцінка</li></ul> отримані студентом.';
@@ -171,9 +171,9 @@ $string['move'] = 'Змінити';
 $string['moveslot'] = 'Перемістити інтервал';
 $string['multiplestudents'] = 'Дозволити багато студентів в інтервалі?';
 $string['multicoursesteacherappointment'] = 'Дозволити співпадання інтервалів в різних курсах';//@TDMU
-$string['multicoursesappointmentoverlap'] = '<b>Помилка!<b> Ви не можете записатися на цей інтервал, оскільки уже записані на прийом в іншому курсі:';//@TDMU
+$string['multicoursesappointmentoverlap'] = '<strong>Помилка!</strong> Ви не можете записатися на цей інтервал, оскільки уже записані на прийом в іншому курсі:';//@TDMU
 $string['myappointments'] = 'Мої графіки прийомів';
-$string['mynote'] = 'Мої примітки';// @TDMU
+$string['mynote'] = 'Мої примітки';//@TDMU
 $string['name'] = 'Ім\'я розкладу';
 $string['needteachers'] = 'Інтервали не можуть бути додані - на курсі немає викладачів';
 $string['negativerange'] = 'Період негативний. Цього неможе бути.';
@@ -263,7 +263,7 @@ $string['tab-thisappointment'] = 'Цей запис';
 $string['tab-otherappointments'] = 'Всі записи цього студента';
 $string['tab-otherstudents'] = 'Студенти в цьому інтервалі';
 $string['teacher'] = 'Викладач';
-$string['teachernote'] = 'Примітки викладача'; // @TDMU
+$string['teachernote'] = 'Примітки викладача'; //@TDMU
 $string['thursday'] = 'Четвер';
 $string['tuesday'] = 'Вівторок';
 $string['unattended'] = 'Незаписані';
@@ -357,10 +357,10 @@ $string['studentnotesrequired_help']='
 <p>Викладач може налаштувати режим вимог для приміток студнентів:</p>
 <ul>
 <li>
-<b>"Ні" - по замовчуванню:</b> Для запису на прийом студенту немає необхідності в прмітках.
+<strong>"Ні" - по замовчуванню:</strong> Для запису на прийом студенту немає необхідності в прмітках.
 </li>
 <li>
-<b>"Так": </b> Для запису на прийом студент повинен ввести примітки.
+<strong>"Так": </strong> Для запису на прийом студент повинен ввести примітки.
 </li>
 </ul>';
 

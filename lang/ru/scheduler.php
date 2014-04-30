@@ -116,8 +116,8 @@ $string['forcewhenoverlap'] = 'Принудительно перекрывать
 $string['forcourses'] = 'Виберите студентов на курсе';
 $string['friday'] = 'Пятница';
 $string['generalconfig'] = 'Общие настройки';
-$string['getstudentsnotes'] = 'Следует указать основания для записи на приём:'; // @TDMU
-$string['getstudentsnoteserr'] = '<b>Примечания обязательны!<b> Изменения не будут сохранены. Попробуйте еще раз!'; // @TDMU
+$string['getstudentsnotes'] = 'Следует указать основания для записи на приём:'; //@TDMU
+$string['getstudentsnoteserr'] = '<strong>Примечания обязательны!</strong> Изменения не будут сохранены. Попробуйте еще раз!'; //@TDMU
 $string['gradingstrategy'] = 'Методика оценивания';
 $string['gradingstrategy_help'] = 'Для расписаний в которых студенты могут иметь несколько записей, выберите, как оценка будет окончательной. '.
     'В журнале оценок может отображаться или <ul><li>средняя оценка или</li><li>максимальная оценка</li></ul> полученная студентом.';
@@ -162,7 +162,7 @@ $string['move'] = 'Изменить';
 $string['moveslot'] = 'Переместить интервал';
 $string['multiplestudents'] = 'Разрешить множество студентов в интервале?';
 $string['multicoursesteacherappointment'] = 'Разрешить совпадения интервалов в разных курсах';//@TDMU
-$string['multicoursesappointmentoverlap'] = '<b>Ошибка!<b> Вы не можете записаться на этот интервал, поскільку уже записаны на приём в другом курсе:';//@TDMU
+$string['multicoursesappointmentoverlap'] = '<strong>Ошибка!</strong> Вы не можете записаться на этот интервал, поскільку уже записаны на приём в другом курсе:';//@TDMU
 $string['myappointments'] = 'Мои графики приёмов';
 $string['mynote'] = 'Mои примечания';// @TDMU
 $string['name'] = 'Имя расписания';
@@ -248,11 +248,11 @@ $string['studentbreakdown'] = 'Студентом';
 $string['studentcomments'] = 'Примечания для студентов';
 $string['studentdetails'] = 'Детальная информация по студенту';
 $string['studentnotes'] = 'Ваши прмечания о графике приёма ';
-$string['studentnotesrequiredopt'] = 'Требовать от студента ввода примечание для записи на приём';// @TDMU
+$string['studentnotesrequiredopt'] = 'Требовать от студента ввода примечание для записи на приём';//@TDMU
 $string['students'] = 'Студенты';
 $string['sunday'] = 'Воскресенье';
 $string['teacher'] = 'Преподаватель';
-$string['teachernote'] = 'Примечания преподавателя'; // @TDMU
+$string['teachernote'] = 'Примечания преподавателя'; //@TDMU
 $string['thursday'] = 'Четверг';
 $string['tuesday'] = 'Вторник';
 $string['unattended'] = 'Незаписанные';
@@ -346,10 +346,10 @@ $string['studentnotesrequired_help']='
 <p>Перподаватель может настроить режим требований для примечаний студнентов:</p>
 <ul>
 <li>
-<b>"Нет" - по умолчанию:</b> Для записи на приём студенту нет необходимости в примечаниях.
+<strong>"Нет" - по умолчанию:</strong> Для записи на приём студенту нет необходимости в примечаниях.
 </li>
 <li>
-<b>"Да":</b> Для записи на приём студент должен ввести примечания.
+<strong>"Да":</strong> Для записи на приём студент должен ввести примечания.
 </li>
 </ul>';
 

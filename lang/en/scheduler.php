@@ -121,7 +121,7 @@ $string['friday'] = 'Friday';
 $string['generalconfig'] = 'General configuration';
 $string['grade'] = 'Grade';
 $string['getstudentsnotes'] = 'Reason for an appointment required:'; // @TDMU
-$string['getstudentsnoteserr'] = '<b>Notes are required!<b> Changes has not been saved. Please try again!'; // @TDMU
+$string['getstudentsnoteserr'] = '<strong>Notes are required!</strong> Changes has not been saved. Please try again!'; // @TDMU
 $string['gradingstrategy'] = 'Grading strategy';
 $string['gradingstrategy_help'] = 'In a scheduler where students can have several appointments, select how grades are aggregated.
     The gradebook can show either <ul><li>the mean grade or</li><li>the maximum grade</li></ul> that the student has achieved.';
@@ -171,9 +171,9 @@ $string['move'] = 'Change';
 $string['moveslot'] = 'Move slot';
 $string['multiplestudents'] = 'Allow multiple students per slot?';
 $string['multicoursesteacherappointment'] = 'Appointments within multiple courses';//@TDMU
-$string['multicoursesappointmentoverlap'] = '<b>Erorr!<b> You can not appoint to this slot because already have an another course appointed:';//@TDMU
+$string['multicoursesappointmentoverlap'] = '<strong>Erorr!</strong> You can not appoint to this slot because already have an another course appointed:';//@TDMU
 $string['myappointments'] = 'My appointments';
-$string['mynote'] = 'My note';// @TDMU
+$string['mynote'] = 'My note';//@TDMU
 $string['name'] = 'Scheduler name';
 $string['needteachers'] = 'Slots cannot be added as this course has no teachers';
 $string['negativerange'] = 'Range is negative. This can\'t be.';
@@ -257,14 +257,14 @@ $string['studentcomments'] = 'Student\'s notes';
 $string['studentdetails'] = 'Student details';
 $string['studentmultiselect'] = 'Each student can be selected only once in this slot';
 $string['studentnotes'] = 'Your notes about the appointment ';
-$string['studentnotesrequiredopt'] = 'Student must input notes for the appointmet';// @TDMU
+$string['studentnotesrequiredopt'] = 'Student must input notes for the appointmet';//@TDMU
 $string['students'] = 'Students';
 $string['sunday'] = 'Sunday';
 $string['tab-thisappointment'] = 'This appointment';
 $string['tab-otherappointments'] = 'All appointments of this student';
 $string['tab-otherstudents'] = 'Students in this slot';
 $string['teacher'] = 'Teacher';
-$string['teachernote'] = 'Teacher notes'; // @TDMU
+$string['teachernote'] = 'Teacher notes'; //@TDMU
 $string['thursday'] = 'Thursday';
 $string['tuesday'] = 'Tuesday';
 $string['unattended'] = 'Unattended';
@@ -330,7 +330,7 @@ $string['exclusivity_help']='<p>You can set a limit on the amount of students th
 
 $string['location_help']='Specify the scheduled location of the meeting.';
 
-$string['multicoursesappointment'] = 'Setting appointments slots overlapping within multiple courses';// @TDMU
+$string['multicoursesappointment'] = 'Setting appointments slots overlapping within multiple courses';//@TDMU
 $string['multicoursesappointment_help']='
 <p>Teacher can customize a slot overlapping behaviour mode :</p>
 <p><ul>
@@ -356,15 +356,15 @@ $string['reuseguardtime_help']='
 $string['staffrolename_help']=' 
 The label for the role who attends students. This is not necessarily a "teacher".';
 
-$string['studentnotesrequired']='Setting a student notes requirements';// @TDMU
+$string['studentnotesrequired']='Setting a student notes requirements';//@TDMU
 $string['studentnotesrequired_help']='
 <p>Teacher can customize a student notes requirements mode:</p>
 <ul>
 <li>
-<b>"No" - default setting:</b> There are did not reqiured students notes on appointmet.
+<strong>"No" - default setting:</strong> There are did not reqiured students notes on appointmet.
 </li>
 <li>
-<b>"Yes": </b> Students will not be able to appoint without an appointment notes (reasons) input.
+<strong>"Yes": </strong> Students will not be able to appoint without an appointment notes (reasons) input.
 </li>
 </ul>';
 
