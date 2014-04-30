@@ -33,7 +33,7 @@ class backup_scheduler_activity_structure_step extends backup_activity_structure
         $slot = new backup_nested_element('slot', array('id'), array(
             'starttime', 'duration', 'teacherid', 'appointmentlocation',
             'reuse', 'timemodified', 'notes', 'exclusivity',
-            'appointmentnote', 'emaildate', 'hideuntil'));
+            'appointmentnote', 'emaildate', 'hideuntil', 'studentteachernotes'));
 
         $appointments = new backup_nested_element('appointments');
 
