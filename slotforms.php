@@ -193,6 +193,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
         $repeatarray[] = $mform->createElement('group', 'studgroup', get_string('student', 'scheduler'), $grouparray, null, false);
 
         // Appointment notes
+        //TODO: teacher notes mus be there!  //TDMU
         $repeatarray[] = $mform->createElement('editor', 'appointmentnote', get_string('appointmentnotes', 'scheduler'), 
                           array('rows' => 3, 'columns' => 60), array('collapsed' => true));
 

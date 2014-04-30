@@ -72,6 +72,7 @@ function scheduler_save_slotform($scheduler, $course, $slotid, $data) {
             $appointment->attended = isset($data->attended[$i]);
             $appointment->appointmentnote = $data->appointmentnote[$i]['text'];
             $appointment->appointmentnoteformat = $data->appointmentnote[$i]['format'];
+            $appointment->studentteachernotes = $data->studentteachernotes[$i]['text']; //TODO: not woking TDMU get student notes
             if (isset($data->grade)) {
                 $selgrade = $data->grade[$i];
                 $appointment->grade = ($selgrade >= 0) ? $selgrade : null;

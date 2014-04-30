@@ -247,7 +247,7 @@ if ($slots = scheduler_get_available_slots($USER->id, $scheduler->id, true)) {
             $teachernotes = '<div class="slotnotes">';
             $teachernotes .= format_string($aSlot->notes).'</div>';
         }
-        
+
         if ($aSlot->appointedbyme and !$aSlot->attended){
             $teacher = $DB->get_record('user', array('id'=>$aSlot->teacherid));
             if ($scheduler->allows_multiple_bookings()) {
@@ -256,12 +256,13 @@ if ($slots = scheduler_get_available_slots($USER->id, $scheduler->id, true)) {
             	$radio = "<input type=\"radio\" name=\"slotid\" value=\"{$aSlot->id}\" checked=\"checked\" />\n";
             }
 
-            $mynotes2teacher = $aSlot->studentteachernotes;//retreive student notes from slot data array
+            $mynotes2teacher = '';
             $mynotes2teacherstr = '';
-            if ($mynotes2teacher != ''){
+            if ($aSlot->studentteachernotes != ''){
+                $mynotes2teacher = $aSlot->studentteachernotes;//retreive student notes from slot data array
                 $mynotes2teacherstr = '<div class="slotnotes">';
                 $mynotes2teacherstr .= format_string($mynotes2teacher).'</div>';
-                }
+            }
 
             $table->data[] = array ("<strong>$startdatestr</strong>", "<strong>$starttime</strong>", "<strong>$endtime</strong>", "<strong>$location</strong>",
             	$radio, "<strong>"."<a href=\"../../user/view.php?id={$aSlot->teacherid}&amp;course=$scheduler->course\">".fullname($teacher).'</a></strong>','<strong>'.$aSlot->groupsession.'</strong>', $teachernotes, $mynotes2teacherstr);
