@@ -55,6 +55,9 @@ class scheduler_editappointment_form extends moodleform {
         $mform->addElement('editor', 'appointmentnote', get_string('appointmentnotes', 'scheduler'),
                            array('rows' => 3, 'columns' => 60), array('collapsed' => true));
         $mform->setType('appointmentnote', PARAM_RAW); // must be PARAM_RAW for rich text editor content
+
+        $mform->addElement('text', 'studentteachernotes', get_string('studentcomments', 'scheduler'), array('size'=>'60'));//TDMU : Display own student note
+        
         if ($this->distribute) {
             $mform->addElement('checkbox', 'distribute', get_string('distributetoslot', 'scheduler'));
             $mform->setDefault('distribute', false);
