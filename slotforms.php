@@ -196,6 +196,11 @@ class scheduler_editslot_form extends scheduler_slotform_base {
         $repeatarray[] = $mform->createElement('editor', 'appointmentnote', get_string('appointmentnotes', 'scheduler'), 
                           array('rows' => 3, 'columns' => 60), array('collapsed' => true));
 
+        //TDMU - display student own notes
+        //$repeatarray[] = $mform->createElement('static', 'studentteachernotes', get_string('studentcomments', 'scheduler'), 'studentteachernotes');//not work
+        $repeatarray[] = $mform->createElement('text', 'studentteachernotes', get_string('studentcomments', 'scheduler'), array('size'=>'60'));
+        //TODO: need   $mform->setType('studentteachernotes', PARAM_RAW);!
+        
         if (isset($this->_customdata['repeats'])) {
             $repeatno = $this->_customdata['repeats'];
         } else if ($this->slotid) {
@@ -204,11 +209,14 @@ class scheduler_editslot_form extends scheduler_slotform_base {
         } else {
             $repeatno = 1;
         }
+        
 
+        
         $repeateloptions = array();
         $nostudcheck = array('studentid', 'eq', 0);
         $repeateloptions['attended']['disabledif'] = $nostudcheck;
         $repeateloptions['appointmentnote']['disabledif'] = $nostudcheck;
+        $repeateloptions['studentteachernotes']['disabledif'] = $nostudcheck;
         $repeateloptions['grade']['disabledif'] = $nostudcheck;
         $repeateloptions['appointhead']['expanded'] = true;
 
@@ -284,7 +292,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                     $slotmsg .= ' [';
                     $slotmsg .= $conflict->duration.' '.get_string('minutes');
                     $slotmsg .= '] ';
-                    $slotmsg .= get_string('incourse', 'scheduler') . ': ' . $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
+                    $slotmsg .= get_string('incourse', 'scheduler') . ': ' . html_writer::link(new moodle_url('/course/view.php', array('id'=>$conflictinfo->id)), $conflictinfo->shortname . ' - ' . $conflictinfo->fullname);
 
                     if ($students) {
                         $slotmsg .= ' (';

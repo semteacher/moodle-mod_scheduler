@@ -34,6 +34,16 @@ div .path-mod-scheduler .appointmentnote{
    border-width: 2px 10px;
 }
 
+<<<<<<< HEAD
 .path-mod-scheduler .yui3-skin-sam .redtext {
   color:#ff0000;
 }
+=======
+.path-mod-70 {
+   width:70%;
+}
+
+table.generaltable {
+   width:99%;
+}
+>>>>>>> 01_allowmulticourseappointment

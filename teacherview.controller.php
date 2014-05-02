@@ -91,7 +91,7 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
                         foreach ($conflicts as $aconflict) {
                             $conflictinfo = scheduler_get_courseinfobyslotid($aconflict->id);//TDMU
                             $msg = userdate($conflictinfo->starttime) . ' ' . usertime($conflictinfo->starttime) . ' ' . get_string('incourse', 'scheduler') . ': ';
-                            $msg .= $conflictinfo->shortname . ' - ' . $conflictinfo->fullname;
+                            $msg .= html_writer::link(new moodle_url('/course/view.php', array('id'=>$conflictinfo->id)), $conflictinfo->shortname . ' - ' . $conflictinfo->fullname);                            
                             echo html_writer::tag('li', $msg);
                         }
                         echo '</ul><br/>';
@@ -397,9 +397,9 @@ switch ($action) {
         $slot->hideuntil = time();
         $slot->appointmentlocation = '';
         $slot->emaildate = 0;
-        $slot->timemodified = time();                                
+        $slot->timemodified = time();
         $slotid = $DB->insert_record('scheduler_slots', $slot);
-        
+
         $appointment = new stdClass();
         $appointment->slotid = $slotid;
         $appointment->studentid = required_param('studentid', PARAM_INT);
@@ -409,10 +409,9 @@ switch ($action) {
         $appointment->timecreated = time();
         $appointment->timemodified = time();
         $DB->insert_record('scheduler_appointment', $appointment);
-        
+
         break;
     }
 }
 
 /*************************************************************************************************************/
-?>

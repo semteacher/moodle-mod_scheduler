@@ -22,7 +22,7 @@ function scheduler_prepare_formdata($scheduler, $slot) {
     if ($slot->emaildate < 0){
         $data->emaildate = 0;
     }
-    
+
     $appointments = $DB->get_records('scheduler_appointment', array('slotid' => $data->id));
     $i = 0;
     foreach ($appointments as $appointment) {
@@ -30,6 +30,7 @@ function scheduler_prepare_formdata($scheduler, $slot) {
         $data->attended[$i] = $appointment->attended;
         $data->appointmentnote[$i]['text'] = $appointment->appointmentnote;
         $data->appointmentnote[$i]['format'] = $appointment->appointmentnoteformat;
+        $data->studentteachernotes[$i] = $appointment->studentteachernotes;
         $data->grade[$i] = $appointment->grade;
         $i++;
     }
@@ -72,6 +73,7 @@ function scheduler_save_slotform($scheduler, $course, $slotid, $data) {
             $appointment->attended = isset($data->attended[$i]);
             $appointment->appointmentnote = $data->appointmentnote[$i]['text'];
             $appointment->appointmentnoteformat = $data->appointmentnote[$i]['format'];
+            $appointment->studentteachernotes = $data->studentteachernotes[$i]; //TODO: not woking TDMU get student notes
             if (isset($data->grade)) {
                 $selgrade = $data->grade[$i];
                 $appointment->grade = ($selgrade >= 0) ? $selgrade : null;
@@ -144,6 +146,10 @@ if ($action == 'addslot') {
     $actionurl = new moodle_url('/mod/scheduler/view.php', array('what' => 'addslot', 'id' => $cm->id));
     $returnurl = new moodle_url('/mod/scheduler/view.php', array('what' => 'view', 'id' => $cm->id));
 
+    if (!scheduler_has_teachers($context)) {
+        print_error('needteachers', 'scheduler', $returnurl);
+    }
+
     $mform = new scheduler_editslot_form($actionurl, $scheduler, $cm, $usergroups);
 
     if ($mform->is_cancelled()) {
@@ -199,6 +205,10 @@ if ($action == 'addsession') {
                     array('what' => 'addsession', 'id' => $cm->id, 'page' => $page));
     $returnurl = new moodle_url('/mod/scheduler/view.php',
                     array('what' => 'view', 'id' => $cm->id, 'page' => $page));
+
+    if (!scheduler_has_teachers($context)) {
+        print_error('needteachers', 'scheduler', $returnurl);
+    }
 
     $mform = new scheduler_addsession_form($actionurl, $scheduler, $cm, $usergroups);
 
@@ -509,7 +519,7 @@ if ($slots){
                 $student = $DB->get_record('user', array('id'=>$appstudent->studentid));
                 if ($student) {
                     $picture = $OUTPUT->user_picture($student);
-                    $name = "<a href=\"view.php?what=viewstudent&amp;id={$cm->id}&amp;studentid={$student->id}&amp;course={$scheduler->course}&amp;order=DESC\">".fullname($student).'</a>';
+                    $name = "<a href=\"view.php?what=viewstudent&amp;id={$cm->id}&amp;appointmentid={$appstudent->id}&amp;course={$scheduler->course}&amp;order=DESC\">".fullname($student).'</a>';
                 }
                 
                 $student2teachernotestr = '';
