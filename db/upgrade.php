@@ -127,7 +127,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         upgrade_mod_savepoint(true, 2014032300, 'scheduler');
     }
 
-    if ($oldversion < 2014032800) {
+    if ($oldversion < 2014032900) {
     
         /// Define field allowmulticourseappointment to be added to scheduler table	
         $table = new xmldb_table('scheduler');	
@@ -155,7 +155,7 @@ function xmldb_scheduler_upgrade($oldversion=0) {
         }       
 
         // savepoint reached
-        upgrade_mod_savepoint(true, 2014032800, 'scheduler');
+        upgrade_mod_savepoint(true, 2014032900, 'scheduler');
         
     }
     
