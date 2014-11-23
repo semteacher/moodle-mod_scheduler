@@ -165,7 +165,15 @@ function scheduler_get_appointed($slotid){
     return $DB->get_records_sql($sql, array($slotid));
 }
 
-
+/**
+ * fully deletes a slot with all dependancies
+ * @param int slotid
+ * @param stdClass $scheduler (optional)
+ * @uses $DB
+ */
+function scheduler_delete_slot($slotid, $scheduler=null){
+    global $DB;
+    
     if ($slot = $DB->get_record('scheduler_slots', array('id' => $slotid))) {
         scheduler_delete_calendar_events($slot);
     }
