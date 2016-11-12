@@ -75,8 +75,16 @@ function scheduler_action_doaddsession($scheduler, $formdata) {
                                     $data->emaildaterel;
             }
             while ($slot->starttime <= $data->timeend - $slot->duration * 60) {
-                $conflicts = $scheduler->get_conflicts($data->timestart, $data->timestart + $slot->duration * 60,
+                if (!isset($data->ignoreconflicts)) {
+                    //check against ALL conflicts
+                    $conflicts = $scheduler->get_conflicts($data->timestart, $data->timestart + $slot->duration * 60,
                                                        $data->teacherid, 0, SCHEDULER_ALL);
+                }
+                else {
+                    //check against LOCAL conflicts only
+                    $conflicts = $scheduler->get_conflicts($data->timestart, $data->timestart + $slot->duration * 60,
+                                                       $data->teacherid, 0, SCHEDULER_SELF);
+                }                                                       
                 $resolvable = (boolean) $data->forcewhenoverlap;
                 foreach ($conflicts as $conflict) {
                     $resolvable = $resolvable
