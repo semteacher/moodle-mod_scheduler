@@ -18,6 +18,8 @@ use Behat\Behat\Context\Step\Given as Given, Behat\Behat\Context\Step\When as Wh
  *
  * @package mod_scheduler
  * @category test
+ * @copyright  2015 Henning Bostelmann
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class behat_mod_scheduler extends behat_base {
 
@@ -26,7 +28,6 @@ class behat_mod_scheduler extends behat_base {
      *
      * @Given /^I add a slot (\d+) days ahead at (\d+) in "(?P<activityname_string>(?:[^"]|\\")*)" scheduler and I fill the form with:$/
      *
-     * @param int $slotcount
      * @param int $daysahead
      * @param int $time
      * @param string $activityname
@@ -107,6 +108,8 @@ class behat_mod_scheduler extends behat_base {
      */
     public function i_add_the_upcoming_events_block_globally() {
 
+        $home = $this->escape(get_string('sitehome'));
+
         $this->execute('behat_data_generators::the_following_exist', array('users',
                         new TableNode(array(
                             array('username', 'firstname', 'lastname', 'email'),
@@ -119,10 +122,11 @@ class behat_mod_scheduler extends behat_base {
                             array('globalmanager1', 'manager')
                         )) ) );
         $this->execute('behat_auth::i_log_in_as', 'globalmanager1');
-        $this->execute('behat_general::click_link', 'Site home');
-        $this->execute('behat_general::click_link', 'Turn editing on');
+        $this->execute('behat_general::click_link', $home);
+        $this->execute('behat_navigation::i_navigate_to_in_current_page_administration', array('Turn editing on'));
         $this->execute('behat_blocks::i_add_the_block', 'Upcoming events');
-        $this->execute('behat_general::i_click_on_in_the', array('Actions', 'link_or_button', 'Upcoming events', 'block'));
+
+        $this->execute('behat_blocks::i_open_the_blocks_action_menu', 'Upcoming events');
         $this->execute('behat_general::click_link', 'Configure Upcoming events block');
         $this->execute('behat_forms::i_set_the_following_fields_to_these_values', new TableNode(array(
                             array('Page contexts', 'Display throughout the entire site')
