@@ -18,6 +18,9 @@ class scheduler_slot_table implements renderable {
     public $slots = array();
     public $scheduler;
     public $showgrades;
+    /** @var bool whether any slot in the table has other students to show */
+    public $hasotherstudents = false;
+
     public $showslot = true;
     public $showattended = false;
     public $showactions = false;
@@ -56,6 +59,7 @@ class scheduler_slot_table implements renderable {
             $slot->grade = $appointmentmodel->grade;
         }
         $this->showactions = $this->showactions || $cancancel;
+        $this->hasotherstudents = $this->hasotherstudents || (bool) $otherstudents;
 
         $this->slots[] = $slot;
     }
@@ -175,14 +179,12 @@ class scheduler_command_bar implements renderable {
         if ($id) {
             $attributes['id'] = $id;
         }
+        $confirmaction = null;
         if ($confirmkey) {
-            if (!$id) {
-                $id = html_writer::random_id('command_link');
-            }
-            $attributes['id'] = $id;
-            $this->linkactions[$id] = new confirm_action(get_string($confirmkey, 'scheduler'));
+            $confirmaction = new confirm_action(get_string($confirmkey, 'scheduler'));
         }
-        $act = new action_menu_link_secondary($url, $pix, $title, $attributes);
+        $act = new action_link($url, $title, $confirmaction, $attributes, $pix);
+        $act->primary = false;
         return $act;
     }
 
