@@ -218,7 +218,8 @@ if ($action == 'addaperiodsession') {
         print_error('needteachers', 'scheduler', $returnurl);
     }
     
-    $mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $usergroups);
+    //$mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $usergroups);
+    $mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $groupsicansee);
     
     //process form response
     if ($mform->is_cancelled()) {
