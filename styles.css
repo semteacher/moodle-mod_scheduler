@@ -216,3 +216,7 @@ body.path-mod-scheduler.jsenabled  input.studentselectsubmit {
 .yui3-skin-sam .redtext {
   color:#ff0000;
 }
+
+#page-content #region-main {
+    overflow: visible !important; 
+}
