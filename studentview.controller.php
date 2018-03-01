@@ -67,7 +67,15 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
             }
         }
     }
-
+	//check against ALL conflicts
+	unset($conflicts);
+    $conflicts = $scheduler->get_conflicts($slot->starttime, $slot->starttime + $slot->duration * 60,
+                                                       0, $userid, SCHEDULER_ALL);
+	//var_dump($conflicts);//die();
+	if ($conflicts){
+		$errormessage = get_string('studentowerlapprohibied', 'scheduler');
+	}
+	
     if ($errormessage) {
         echo $output->header();
         echo $output->box($errormessage, 'error');
