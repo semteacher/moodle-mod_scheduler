@@ -460,7 +460,7 @@ $string['yourappointmentnote'] = 'Comments for your eyes';
 $string['yourslotnotes'] = 'Comments on the meeting';
 $string['yourstudentnote'] = 'Your message';
 $string['yourtotalgrade'] = 'Your total grade in this activity is <strong>{$a}</strong>.';
-
+$string['defmaxstudentsperslot'] = 'Maximum number of students per slot';
 
 /* ***********  Help strings from here on ************ */
 
@@ -504,6 +504,8 @@ The label for the role who attends students. This is not necessarily a "teacher"
 $string['guardtime_help'] = 'A guard time prevents students from changing their booking shortly before the appointment.
 <p>If the guard time is enabled and set to, for example, 2 hours, then students will be unable to book a slot that starts in less than 2 hours time from now,
 and they will be unable to drop an appointment if it start in less than 2 hours.</p>';
+
+$string['defmaxstudentsperslot_desc'] = 'Group slots / non-exclusive slots can have at most this number of students. Note that it is default value only and could be overrided.';
 
 
 /* ***********  E-mail templates from here on ************ */

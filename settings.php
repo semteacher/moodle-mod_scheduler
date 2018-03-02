@@ -43,5 +43,10 @@ if ($ADMIN->fulltree) {
                      get_string('uploadmaxfilesglobal', 'scheduler'),
                      get_string('uploadmaxfilesglobal_desc', 'scheduler'),
                      5, PARAM_INT));
+					 
+    $settings->add(new admin_setting_configtext('mod_scheduler/defmaxstudentsperslot', 
+					 get_string('defmaxstudentsperslot', 'scheduler'),
+					 get_string('defmaxstudentsperslot_desc', 'scheduler'),
+					 14, PARAM_INT));
 
 }
