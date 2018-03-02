@@ -12,7 +12,6 @@ defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot.'/mod/scheduler/mailtemplatelib.php');
 
-
 function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $formdata, $returnurl) {
 
     global $DB, $COURSE, $output;
@@ -68,18 +67,36 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
         }
     }
 	//check against ALL conflicts
+	//TODO: need global module setting to control student's booking overlaps
 	unset($conflicts);
     $conflicts = $scheduler->get_conflicts($slot->starttime, $slot->starttime + $slot->duration * 60,
                                                        0, $userid, SCHEDULER_ALL);
-	//var_dump($conflicts);//die();
 	if ($conflicts){
-		$errormessage = get_string('studentowerlapprohibied', 'scheduler');
+		//$errormessage = get_string('studentowerlapprohibied', 'scheduler');
+		$errormessage = 'You can not book this because you have already booked an another appointment for same time!';
+		$errormessage.= html_writer::start_tag('ul');
+		foreach ($conflicts as $conflict){
+			$confcourseurl = new moodle_url('/course/view.php', array('id'=>$conflict->courseid));
+			$confscheduler = \scheduler_instance::load_by_id($conflict->schedulerid);
+			$confschedcmurl = new moodle_url('/mod/scheduler/view.php', array('id'=>$confscheduler->get_cmid()));
+			$confinfo = html_writer::link($confschedcmurl, userdate($conflict->starttime) . ' ');
+			$confinfo.= get_string('incourse', 'scheduler') . ': ';
+			$confinfo.= html_writer::link($confcourseurl, $conflict->coursefullname);
+			$errormessage.= html_writer::tag('li',$confinfo);
+		}
+		$errormessage.= html_writer::end_tag('ul');
+		//$cl = new scheduler_conflict_list();
+        //$cl->add_conflicts($conflicts);
 	}
 	
     if ($errormessage) {
         echo $output->header();
         echo $output->box($errormessage, 'error');
-        echo $output->continue_button($returnurl);
+		
+        //TODO: update with links
+		//echo $output->render($cl);
+        
+		echo $output->continue_button($returnurl);
         echo $output->footer();
         exit();
     }
