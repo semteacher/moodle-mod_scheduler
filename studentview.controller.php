@@ -125,6 +125,8 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
         }
     }
     $slot->save();
+	//decrease capability of the all other overlapped slots of this teacher
+    scheduler_autoupdate_student_count(count($userstobook), $slot, $scheduler, get_config('mod_scheduler', 'defmaxstudentsperslot')); //@TDMU
     redirect($returnurl);
 
 }
@@ -306,6 +308,8 @@ if ($action == 'cancelbooking') {
             \mod_scheduler\event\booking_removed::create_from_slot($slot)->trigger();
         }
     }
+	//increase capability of the all other overlapped slots of this teacher
+    scheduler_autoupdate_student_count(0-count($userstocancel), $slot, $scheduler, get_config('mod_scheduler', 'defmaxstudentsperslot')); //@TDMU
     redirect($returnurl);
 
 }

@@ -363,6 +363,8 @@ switch ($action) {
         }
 
         $slot->save();
+		//increase capability of the all other overlapped slots of this teacher
+		scheduler_autoupdate_student_count(0-count($oldstudents), $slot, $scheduler, get_config('mod_scheduler', 'defmaxstudentsperslot')); //@TDMU		
         break;
     }
 

@@ -434,12 +434,14 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                 $this->noteoptions, $editor['text']);
         $slot->notesformat = $editor['format'];
 
-        $currentapps = $slot->get_appointments();
+        $appointdelta = 0; //@TDMU - track changes in number of appointed students
+		$currentapps = $slot->get_appointments();
         for ($i = 0; $i < $data->appointment_repeats; $i++) {
             if ($data->deletestudent[$i] != 0) {
                 if ($data->appointid[$i]) {
                     $app = $slot->get_appointment($data->appointid[$i]);
                     $slot->remove_appointment($app);
+					$appointdelta = $appointdelta - 1; //increase overlaped slots' capacity
                 }
             }
             else if ($data->studentid[$i] > 0) {
@@ -450,6 +452,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
                     $app = $slot->create_appointment();
                     $app->studentid = $data->studentid[$i];
                     $app->save();
+					$appointdelta = $appointdelta + 1; //decrease overlaped slots' capacity
                 }
                 $app->attended = isset($data->attended[$i]);
 
@@ -476,7 +479,8 @@ class scheduler_editslot_form extends scheduler_slotform_base {
         }
 
         $slot->save();
-
+		//change capability of the all other overlapped slots of this teacher
+		scheduler_autoupdate_student_count($appointdelta, $slot, $this->scheduler, get_config('mod_scheduler', 'defmaxstudentsperslot')); //@TDMU
         $slot = $this->scheduler->get_slot($slot->id);
 
         return $slot;
