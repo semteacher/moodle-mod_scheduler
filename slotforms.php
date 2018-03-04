@@ -200,7 +200,7 @@ class scheduler_editslot_form extends scheduler_slotform_base {
 
         // Ignore conflict checkbox.
         $mform->addElement('checkbox', 'ignoreconflicts', get_string('ignoreconflicts', 'scheduler'));
-        $mform->setDefault('ignoreconflicts', false);
+        $mform->setDefault('ignoreconflicts', true);
         $mform->addHelpButton('ignoreconflicts', 'ignoreconflicts', 'scheduler');
 
         // Common fields.
@@ -537,6 +537,8 @@ class scheduler_addsession_form extends scheduler_slotform_base {
         $timegroup[] = $mform->createElement('select', 'endhour', get_string('hour', 'form'), $hours);
         $timegroup[] = $mform->createElement('select', 'endminute', get_string('minute', 'form'), $minutes);
         $mform->addGroup($timegroup, 'timerange', get_string('timerange', 'scheduler'), null, false);
+		$mform->setDefault('starthour', 15);
+		$mform->setDefault('endhour', 21);
 
         // Divide into slots?
         $mform->addElement('selectyesno', 'divide', get_string('divide', 'scheduler'));
@@ -556,7 +558,7 @@ class scheduler_addsession_form extends scheduler_slotform_base {
         
         // Ignore conflict checkbox
         $mform->addElement('checkbox', 'ignoreconflicts', get_string('ignoreconflicts', 'scheduler'));
-        $mform->setDefault('ignoreconflicts', false);
+        $mform->setDefault('ignoreconflicts', true);
         $mform->addHelpButton('ignoreconflicts', 'ignoreconflicts', 'scheduler');
 
         // Common fields.
@@ -590,7 +592,7 @@ class scheduler_addsession_form extends scheduler_slotform_base {
         }
 
         $mform->addElement('select', 'emaildaterel', get_string('emailreminder', 'scheduler'), $remindersel);
-        $mform->setDefault('remindersel', -1);
+        $mform->setDefault('emaildaterel', 0);
 
         $this->add_action_buttons();
 
@@ -664,7 +666,9 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         $timegroup[] = $mform->createElement('select', 'endhour', get_string('hour', 'form'), $hours);
         $timegroup[] = $mform->createElement('select', 'endminute', get_string('minute', 'form'), $minutes);
         $mform->addGroup($timegroup, 'timerange', get_string('timerange', 'scheduler'), null, false);
-        
+        $mform->setDefault('starthour', 15);
+		$mform->setDefault('endhour', 21);
+
         // Divide into slots?
         $mform->addElement('selectyesno', 'divide', get_string('divide', 'scheduler'));
         $mform->setDefault('divide', 1);
@@ -680,7 +684,7 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         
         // Ignore conflict checkbox
         $mform->addElement('checkbox', 'ignoreconflicts', get_string('ignoreconflicts', 'scheduler'));
-        $mform->setDefault('ignoreconflicts', false);
+        $mform->setDefault('ignoreconflicts', true);
         $mform->addHelpButton('ignoreconflicts', 'ignoreconflicts', 'scheduler');
         
         // Common fields
@@ -714,7 +718,7 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
         }
 
         $mform->addElement('select', 'emaildaterel', get_string('emailreminder', 'scheduler'), $remindersel);
-        $mform->setDefault('remindersel', -1);
+        $mform->setDefault('emaildaterel', 0);
 
         $this->add_action_buttons();
 

@@ -41,6 +41,7 @@ class mod_scheduler_mod_form extends moodleform_mod {
         }
         $mform->addRule('name', null, 'required', null, 'client');
         $mform->addRule('name', get_string('maximumchars', '', 255), 'maxlength', 255, 'client');
+		$mform->setDefault('name', get_string('defaultschedulername', 'scheduler').' - '.$COURSE->shortname);//@TDMU
 
         $this->standard_intro_elements(get_string('introduction', 'scheduler'));
 
@@ -52,6 +53,7 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $mform->setType('staffrolename', PARAM_TEXT);
         $mform->addRule('staffrolename', get_string('error'), 'maxlength', 255);
         $mform->addHelpButton('staffrolename', 'staffrolename', 'scheduler');
+		$mform->setDefault('staffrolename', get_string('defaultcourseteacher'));//@TDMU
 
         $modegroup = array();
         $modegroup[] = $mform->createElement('static', 'modeintro', '', get_string('modeintro', 'scheduler'));
@@ -62,14 +64,14 @@ class mod_scheduler_mod_form extends moodleform_mod {
             $maxbookoptions[(string)$i] = $i;
         }
         $modegroup[] = $mform->createElement('select', 'maxbookings', '', $maxbookoptions);
-        $mform->setDefault('maxbookings', 1);
+        $mform->setDefault('maxbookings', 2);//@TDMU
 
         $modegroup[] = $mform->createElement('static', 'modeappointments', '', get_string('modeappointments', 'scheduler'));
 
         $modeoptions['oneonly'] = get_string('modeoneonly', 'scheduler');
         $modeoptions['onetime'] = get_string('modeoneatatime', 'scheduler');
         $modegroup[] = $mform->createElement('select', 'schedulermode', '', $modeoptions);
-        $mform->setDefault('schedulermode', 'oneonly');
+        $mform->setDefault('schedulermode', 'onetime');//@TDMU
 
         $mform->addGroup($modegroup, 'modegrp', get_string('mode', 'scheduler'), ' ', false);
         $mform->addHelpButton('modegrp', 'appointmentmode', 'scheduler');
@@ -90,14 +92,16 @@ class mod_scheduler_mod_form extends moodleform_mod {
 
         $mform->addElement('duration', 'guardtime', get_string('guardtime', 'scheduler'), array('optional' => true));
         $mform->addHelpButton('guardtime', 'guardtime', 'scheduler');
+		$mform->setDefault('guardtime', array('number'=>1, 'timeunit'=>3600, 'enabled'=>1));//@TDMU
 
         $mform->addElement('text', 'defaultslotduration', get_string('defaultslotduration', 'scheduler'), array('size' => '2'));
         $mform->setType('defaultslotduration', PARAM_INT);
         $mform->addHelpButton('defaultslotduration', 'defaultslotduration', 'scheduler');
-        $mform->setDefault('defaultslotduration', 15);
+        $mform->setDefault('defaultslotduration', 90);//@TDMU
 
         $mform->addElement('selectyesno', 'allownotifications', get_string('notifications', 'scheduler'));
         $mform->addHelpButton('allownotifications', 'notifications', 'scheduler');
+		$mform->setDefault('allownotifications', 1);//@TDMU
 
         $noteoptions['0'] = get_string('usenotesnone', 'scheduler');
         $noteoptions['1'] = get_string('usenotesstudent', 'scheduler');
@@ -109,19 +113,22 @@ class mod_scheduler_mod_form extends moodleform_mod {
         // Grade settings.
         $this->standard_grading_coursemodule_elements();
 
-        $mform->setDefault('grade', 0);
+        $mform->setDefault('grade', 12);//@TDMU
+		$mform->setDefault('gradepass', 4);//@TDMU
 
         $gradingstrategy[SCHEDULER_MEAN_GRADE] = get_string('meangrade', 'scheduler');
         $gradingstrategy[SCHEDULER_MAX_GRADE] = get_string('maxgrade', 'scheduler');
         $mform->addElement('select', 'gradingstrategy', get_string('gradingstrategy', 'scheduler'), $gradingstrategy);
         $mform->addHelpButton('gradingstrategy', 'gradingstrategy', 'scheduler');
         $mform->disabledIf('gradingstrategy', 'grade[modgrade_type]', 'eq', 'none');
+		$mform->setDefault('gradingstrategy', 1);//@TDMU
 
         // Booking form and student-supplied data.
         $mform->addElement('header', 'bookinghdr', get_string('bookingformoptions', 'scheduler'));
 
         $mform->addElement('selectyesno', 'usebookingform', get_string('usebookingform', 'scheduler'));
         $mform->addHelpButton('usebookingform', 'usebookingform', 'scheduler');
+		$mform->setDefault('usebookingform', 1);//@TDMU
 
         $this->editoroptions = array('trusttext' => true, 'maxfiles' => -1, 'maxbytes' => 0,
                                      'context' => $this->context, 'collapsed' => true);
@@ -130,12 +137,13 @@ class mod_scheduler_mod_form extends moodleform_mod {
         $mform->setType('bookinginstructions', PARAM_RAW); // Must be PARAM_RAW for rich text editor content.
         $mform->disabledIf('bookinginstructions_editor', 'usebookingform', 'eq', '0');
         $mform->addHelpButton('bookinginstructions_editor', 'bookinginstructions', 'scheduler');
+		$mform->getElement('bookinginstructions_editor')->setValue(array('text' => get_string('defaultbookinginstructions', 'scheduler')));//@TDMU
 
         $studentnoteoptions['0'] = get_string('no');
         $studentnoteoptions['1'] = get_string('yesoptional', 'scheduler');
         $studentnoteoptions['2'] = get_string('yesrequired', 'scheduler');
         $mform->addElement('select', 'usestudentnotes', get_string('usestudentnotes', 'scheduler'), $studentnoteoptions);
-        $mform->setDefault('usestudentnotes', '0');
+        $mform->setDefault('usestudentnotes', '2');//@TDMU
         $mform->disabledIf('usestudentnotes', 'usebookingform', 'eq', '0');
         $mform->addHelpButton('usestudentnotes', 'usestudentnotes', 'scheduler');
 

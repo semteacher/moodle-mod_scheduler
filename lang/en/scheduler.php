@@ -461,6 +461,8 @@ $string['yourslotnotes'] = 'Comments on the meeting';
 $string['yourstudentnote'] = 'Your message';
 $string['yourtotalgrade'] = 'Your total grade in this activity is <strong>{$a}</strong>.';
 $string['defmaxstudentsperslot'] = 'Maximum number of students per slot';
+$string['defaultschedulername'] = 'Відробки / Reworks';
+$string['defaultbookinginstructions'] = 'Вкажіть тему заняття для відробки, підставу (дата пропуску / оцінка) та номер і дату дозволу (якщо є)/ Provide topic of class that you want to rework, reason (missed class, negative mark), permission  credentials (required for missed classes)';
 
 /* ***********  Help strings from here on ************ */
 
