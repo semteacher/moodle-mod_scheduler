@@ -1011,10 +1011,13 @@ class scheduler_instance extends mvc_record_model {
         if ($this->schedulermode == 'onetime') {
             if ($includechangeable) {
                 $sql .= ' AND s.starttime <= :cutofftime';
+                //$sql .= ' AND s.starttime > :cutofftime'; //@TDMU
             }
+            $sql .= ' AND s.starttime > :cutofftime'; //@TDMU
             $sql .= ' AND a.attended = 0';
         } else if ($includechangeable) {
             $sql .= ' AND (s.starttime <= :cutofftime OR a.attended = 1)';
+            //$sql .= ' AND (s.starttime > :cutofftime OR a.attended = 1)'; //@TDMU - only in future?
         }
         $params = array('schedulerid' => $this->id, 'studentid' => $studentid, 'cutofftime' => time() + $this->guardtime);
 
