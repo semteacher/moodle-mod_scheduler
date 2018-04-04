@@ -47,6 +47,6 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('mod_scheduler/defmaxstudentsperslot', 
 					 get_string('defmaxstudentsperslot', 'scheduler'),
 					 get_string('defmaxstudentsperslot_desc', 'scheduler'),
-					 14, PARAM_INT));
+					 12, PARAM_INT));
 
 }
