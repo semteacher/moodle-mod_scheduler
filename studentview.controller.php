@@ -90,15 +90,8 @@ function scheduler_book_slot($scheduler, $slotid, $userid, $groupid, $mform, $fo
 	}
 	
     if ($errormessage) {
-        echo $output->header();
-        echo $output->box($errormessage, 'error');
-		
-        //TODO: update with links
-		//echo $output->render($cl);
-        
-		echo $output->continue_button($returnurl);
-        echo $output->footer();
-        exit();
+        \core\notification::error($errormessage);
+        redirect($returnurl);
     }
 
     // Create new appointment for each member of the group.
@@ -215,7 +208,7 @@ if ($action == 'viewbooking') {
 
     echo $output->header();
     echo $output->heading(get_string('bookingdetails', 'scheduler'));
-    echo $output->box(format_text($scheduler->intro, $scheduler->introformat));
+    echo $output->mod_intro($scheduler);
     $info = scheduler_appointment_info::make_from_appointment($slot, $appointment);
     echo $output->render($info);
 
