@@ -213,7 +213,7 @@ function scheduler_action_delete_slots(array $slots, $action, moodle_url $return
     redirect($returnurl);
 }
 
-function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
+function scheduler_action_doaddaperiodsession($scheduler, $formdata, moodle_url $returnurl) {
 
     global $DB, $output;
 
@@ -279,25 +279,28 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
                                      && $conflict->isself == 1       // Do not delete slots outside the current scheduler.
                                      && $conflict->numstudents == 0; // Do not delete slots with bookings.
             }
-            
+                
             if ($conflicts) {
+                $conflictmsg = '';
                 $cl = new scheduler_conflict_list();
                 $cl->add_conflicts($conflicts);
                 if (!$resolvable) {
-                    print_string('conflictingslots', 'scheduler', userdate($data->timestart));
-                    echo $output->doc_link('mod/scheduler/conflict', '', true);
-                    echo $output->render($cl);
+                    $conflictmsg .= get_string('conflictingslots', 'scheduler', userdate($data->timestart));
+                    $conflictmsg .= $output->doc_link('mod/scheduler/conflict', '', true);
+                    $conflictmsg .= $output->render($cl);
                 } else { // We force, so delete all conflicting before inserting.
                     foreach ($conflicts as $conflict) {
                         $cslot = $scheduler->get_slot($conflict->id);
                         \mod_scheduler\event\slot_deleted::create_from_slot($cslot, 'addsession-conflict')->trigger();
                         $cslot->delete();
                     }
-                    print_string('deletedconflictingslots', 'scheduler', userdate($data->timestart));
-                    echo $output->doc_link('mod/scheduler/conflict', '', true);
-                    echo $output->render($cl);
+                    $conflictmsg .= get_string('deletedconflictingslots', 'scheduler', userdate($data->timestart));
+                    $conflictmsg .= $output->doc_link('mod/scheduler/conflict', '', true);
+                    $conflictmsg .= $output->render($cl);
                 }
+                \core\notification::warning($conflictmsg);
             }
+
             if (!$conflicts || $resolvable) {
                 $slotid = $DB->insert_record('scheduler_slots', $slot, true, true);
                 $slotobj = $scheduler->get_slot($slotid);
@@ -308,7 +311,12 @@ function scheduler_action_doaddaperiodsession($scheduler, $formdata) {
             $data->timestart += ($data->duration + $data->break) * 60;
         }
     }
-    echo $output->action_message(get_string('slotsadded', 'scheduler', $countslots));
+    //echo $output->action_message(get_string('slotsadded', 'scheduler', $countslots));
+    $messagetype = ($countslots > 0) ? \core\output\notification::NOTIFY_SUCCESS : \core\output\notification::NOTIFY_INFO;
+    $message = get_string('slotsadded', 'scheduler', $countslots);
+    \core\notification::add($message, $messagetype);
+    
+    redirect($returnurl);
 }
 
 // Require valid session key for all actions.
