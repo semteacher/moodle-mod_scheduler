@@ -130,7 +130,7 @@ if ($action == 'addslot') {
     $actionurl = new moodle_url($baseurl, array('what' => 'addslot'));
 
     if (!$scheduler->has_available_teachers()) {
-        print_error('needteachers', 'scheduler', viewurl);
+        print_error('needteachers', 'scheduler', $viewurl);
     }
 
     $mform = new scheduler_editslot_form($actionurl, $scheduler, $cm, $groupsicansee);
@@ -213,29 +213,25 @@ if ($action == 'addsession') {
     }
 }
 
-/************************************ Add session multiple slots (via YUI calendar) form ************************************/
+/***************************** Add session multiple slots (via YUI calendar) form *****************************/
 if ($action == 'addaperiodsession') {
-    
-    $courselang = substr($COURSE->lang, 0, 2); //need to localization option
 
-    $actionurl = new moodle_url('/mod/scheduler/view.php',
-                    array('what' => 'addaperiodsession', 'id' => $cm->id, 'subpage' => $subpage));
-    $returnurl = new moodle_url('/mod/scheduler/view.php',
-                    array('what' => 'view', 'id' => $cm->id, 'subpage' => $subpage));
+    $courselang = substr($COURSE->lang, 0, 2); //need to localization option
+    $actionurl = new moodle_url($baseurl, array('what' => 'addaperiodsession'));
 
     if (!$scheduler->has_available_teachers()) {
-        print_error('needteachers', 'scheduler', $returnurl);
+        print_error('needteachers', 'scheduler', viewurl);
     }
-    
-    //$mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $usergroups);
+
     $mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $groupsicansee);
-    
+
     //process form response
     if ($mform->is_cancelled()) {
-        redirect($returnurl);
+        redirect($viewurl);
     } else if ($formdata = $mform->get_data()) {
-        scheduler_action_doaddaperiodsession($scheduler, $formdata);
+        scheduler_action_doaddaperiodsession($scheduler, $formdata, $viewurl);
     } else {
+        echo $output->header();
         //prepare and load the YUI module
         $calconfig=array($courselang);
         $calfunction ='M.mod_scheduler.calpane.init';
