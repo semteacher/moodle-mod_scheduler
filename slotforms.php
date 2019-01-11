@@ -641,6 +641,7 @@ class scheduler_addaperiodsession_form extends scheduler_slotform_base {
   
         $listdates = "";
         $mform->addElement('hidden', 'getlistdates', $listdates);
+        $mform->setType('getlistdates', PARAM_RAW);
       
         // Define Calendar panel
         $mform->addElement('html', '<div id="calendar" class="yui3-skin-sam">');
