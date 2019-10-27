@@ -11,6 +11,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use \mod_scheduler\model\scheduler;
+use \mod_scheduler\model\slot;
+
 require_once($CFG->libdir.'/formslib.php');
 
 /**
@@ -23,7 +26,7 @@ require_once($CFG->libdir.'/formslib.php');
 abstract class scheduler_slotform_base extends moodleform {
 
     /**
-     * @var scheduler_instance the scheduler that this form refers to
+     * @var scheduler the scheduler that this form refers to
      */
     protected $scheduler;
 
@@ -46,12 +49,12 @@ abstract class scheduler_slotform_base extends moodleform {
      * Create a new form
      *
      * @param mixed $action the action attribute for the form
-     * @param scheduler_instance $scheduler
+     * @param scheduler $scheduler
      * @param object $cm unused
      * @param array $usergroups groups to filter for
      * @param array $customdata
      */
-    public function __construct($action, scheduler_instance $scheduler, $cm, $usergroups, $customdata=null) {
+    public function __construct($action, scheduler $scheduler, $cm, $usergroups, $customdata=null) {
         $this->scheduler = $scheduler;
         $this->usergroups = $usergroups;
         $this->noteoptions = array('trusttext' => true, 'maxfiles' => -1, 'maxbytes' => 0,
@@ -228,13 +231,13 @@ class scheduler_editslot_form extends scheduler_slotform_base {
 
         // Choose student.
         $students = $this->scheduler->get_available_students($this->usergroups);
-        $studentsmenu = array('0' => get_string('choosedots'));
+        $studentchoices = array();
         if ($students) {
             foreach ($students as $astudent) {
-                $studentsmenu[$astudent->id] = fullname($astudent);
+                $studentchoices[$astudent->id] = fullname($astudent);
             }
         }
-        $grouparray[] = $mform->createElement('select', 'studentid', '', $studentsmenu);
+        $grouparray[] = $mform->createElement('searchableselector', 'studentid', '', $studentchoices);
         $grouparray[] = $mform->createElement('hidden', 'appointid', 0);
 
         // Seen tickbox.
@@ -350,10 +353,10 @@ class scheduler_editslot_form extends scheduler_slotform_base {
     /**
      * Fill the form data from an existing slot
      *
-     * @param scheduler_slot $slot
+     * @param slot $slot
      * @return stdClass form data
      */
-    public function prepare_formdata(scheduler_slot $slot) {
+    public function prepare_formdata(slot $slot) {
 
         $context = $slot->get_scheduler()->get_context();
 
@@ -403,16 +406,16 @@ class scheduler_editslot_form extends scheduler_slotform_base {
      * Save a slot object, updating it with data from the form
      * @param int $slotid
      * @param mixed $data form data
-     * @return scheduler_slot the updated slot
+     * @return slot the updated slot
      */
     public function save_slot($slotid, $data) {
 
         $context = $this->scheduler->get_context();
 
         if ($slotid) {
-            $slot = scheduler_slot::load_by_id($slotid, $this->scheduler);
+            $slot = slot::load_by_id($slotid, $this->scheduler);
         } else {
-            $slot = new scheduler_slot($this->scheduler);
+            $slot = new slot($this->scheduler);
         }
 
         // Set data fields from input form.

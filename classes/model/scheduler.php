@@ -8,9 +8,10 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+namespace mod_scheduler\model;
+
 defined('MOODLE_INTERNAL') || die();
 
-require_once('modellib.php');
 require_once($CFG->dirroot . '/grade/lib.php');
 
 /**
@@ -20,15 +21,15 @@ require_once($CFG->dirroot . '/grade/lib.php');
  * @copyright  2016 Henning Bostelmann and others (see README.txt)
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class scheduler_instance extends mvc_record_model {
+class scheduler extends mvc_record_model {
 
     /**
-     * @var stdClass course module record for this scheduler
+     * @var \stdClass course module record for this scheduler
      */
     protected $cm = null;
 
     /**
-     * @var stdClass course record for this scheduler
+     * @var \stdClass course record for this scheduler
      */
     protected $courserec = null;
 
@@ -53,15 +54,14 @@ class scheduler_instance extends mvc_record_model {
 
     protected function __construct() {
         parent::__construct();
-        $this->slots = new mvc_child_list($this, 'scheduler_slots', 'schedulerid',
-            new scheduler_slot_factory($this));
+        $this->slots = new mvc_child_list($this, 'scheduler_slots', 'schedulerid', new slot_factory($this));
     }
 
     /**
      * Create a scheduler instance from the database.
      *
      * @param int $id module id of the scheduler
-     * @return scheduler_instance
+     * @return scheduler
      */
     public static function load_by_id($id) {
         global $DB;
@@ -73,7 +73,7 @@ class scheduler_instance extends mvc_record_model {
      * Create a scheduler instance from the database.
      *
      * @param int $cmid course module id of the scheduler
-     * @return scheduler_instance
+     * @return scheduler
      */
     public static function load_by_coursemodule_id($cmid) {
         global $DB;
@@ -85,11 +85,11 @@ class scheduler_instance extends mvc_record_model {
      * Create a scheduler instance from an already loaded record.
      *
      * @param int $id the module id of the scheduler
-     * @param stdClass $coursemodule course module record
-     * @return scheduler_instance
+     * @param \stdClass $coursemodule course module record
+     * @return scheduler
      */
-    protected static function load_from_record($id, stdClass $coursemodule) {
-        $scheduler = new scheduler_instance();
+    protected static function load_from_record($id, \stdClass $coursemodule) {
+        $scheduler = new scheduler();
         $scheduler->load($id);
         $scheduler->cm = $coursemodule;
         $scheduler->groupmode = groups_get_activity_groupmode($coursemodule);
@@ -133,7 +133,7 @@ class scheduler_instance extends mvc_record_model {
     /**
      * Retrieve the course module record of this scheduler
      *
-     * @return stdClass
+     * @return \stdClass
      */
     public function get_cm() {
         return $this->cm;
@@ -151,7 +151,7 @@ class scheduler_instance extends mvc_record_model {
     /**
      * Retrieve the course record of this scheduler
      *
-     * @return stdClass
+     * @return \stdClass
      */
     public function get_courserec() {
         global $DB;
@@ -168,7 +168,7 @@ class scheduler_instance extends mvc_record_model {
      */
     public function get_context() {
         if ($this->context == null) {
-            $this->context = context_module::instance($this->get_cmid());
+            $this->context = \context_module::instance($this->get_cmid());
         }
         return $this->context;
     }
@@ -264,7 +264,7 @@ class scheduler_instance extends mvc_record_model {
     /**
      * get the last location of a certain teacher in this scheduler
      *
-     * @param stdClass $user
+     * @param \stdClass $user
      * @uses $DB
      * @return string the last known location for the current user (teacher)
      */
@@ -416,8 +416,8 @@ class scheduler_instance extends mvc_record_model {
         $gradesums = array();
 
         foreach ($grades as $grade) {
-            $gradesums[$grade->studentid] = new stdClass();
-            $finalgrades[$grade->studentid] = new stdClass();
+            $gradesums[$grade->studentid] = new \stdClass();
+            $finalgrades[$grade->studentid] = new \stdClass();
             $finalgrades[$grade->studentid]->userid = $grade->studentid;
         }
         if ($this->scale > 0) { // Grading numerically.
@@ -470,19 +470,26 @@ class scheduler_instance extends mvc_record_model {
         // Include any empty grades.
         if ($userid > 0) {
             if (!array_key_exists($userid, $finalgrades)) {
-                $finalgrades[$userid] = new stdClass();
+                $finalgrades[$userid] = new \stdClass();
                 $finalgrades[$userid]->userid = $userid;
                 $finalgrades[$userid]->rawgrade = null;
             }
         } else {
             $gui = new graded_users_iterator($this->get_courserec());
-            $gui->init();
-            while ($userdata = $gui->next_user()) {
-                $uid = $userdata->user->id;
-                if (!array_key_exists($uid, $finalgrades)) {
-                    $finalgrades[$uid] = new stdClass();
-                    $finalgrades[$uid]->userid = $uid;
-                    $finalgrades[$uid]->rawgrade = null;
+            // We must gracefully live through the gradesneedregrading that can be thrown by init()
+            try {
+                $gui->init();
+                while ($userdata = $gui->next_user()) {
+                    $uid = $userdata->user->id;
+                    if (!array_key_exists($uid, $finalgrades)) {
+                        $finalgrades[$uid] = new \stdClass();
+                        $finalgrades[$uid]->userid = $uid;
+                        $finalgrades[$uid]->rawgrade = null;
+                    }
+                }
+            } catch (\moodle_exception $e) {
+                if ($e->errorcode != 'gradesneedregrading') {
+                   throw $e;
                 }
             }
         }
@@ -495,7 +502,7 @@ class scheduler_instance extends mvc_record_model {
      * The return value is a grade_grade object.
      *
      * @param int $studentid id number of the student
-     * @return stdClass the gradebook information. May be null if no info is found.
+     * @return \stdClass the gradebook information. May be null if no info is found.
      */
     public function get_gradebook_info($studentid) {
 
@@ -523,7 +530,7 @@ class scheduler_instance extends mvc_record_model {
      * @param string $orderby ORDER BY fields
      * @return scheduler_slot[]
      */
-    protected function fetch_slots($wherecond, $havingcond, array $params, $limitfrom='', $limitnum='', $orderby='s.id') {
+    protected function fetch_slots($wherecond, $havingcond, array $params, $limitfrom='', $limitnum='', $orderby='') {
         global $DB;
         $select = 'SELECT s.* FROM {scheduler_slots} s';
 
@@ -538,14 +545,18 @@ class scheduler_instance extends mvc_record_model {
             $having = 'HAVING '.$havingcond;
         }
 
-        $order = 'ORDER BY '.$orderby;
+        if ($orderby) {
+            $order = "ORDER BY $orderby, s.id";
+        } else {
+            $order = "ORDER BY s.id";
+        }
 
         $sql = "$select $where $having $order";
 
         $slotdata = $DB->get_records_sql($sql, $params, $limitfrom, $limitnum);
         $slots = array();
         foreach ($slotdata as $slotrecord) {
-            $slot = new scheduler_slot($this);
+            $slot = new slot($this);
             $slot->load_record($slotrecord);
             $slots[] = $slot;
         }
@@ -627,7 +638,7 @@ class scheduler_instance extends mvc_record_model {
         global $DB;
 
         $slotdata = $DB->get_record('scheduler_slots', array('id' => $id, 'schedulerid' => $this->id), '*', MUST_EXIST);
-        $slot = new scheduler_slot($this);
+        $slot = new slot($this);
         $slot->load_record($slotdata);
         return $slot;
     }
@@ -731,7 +742,7 @@ class scheduler_instance extends mvc_record_model {
             }
         }
         $wherecond .= " AND ($subcond)";
-        $order = 's.starttime ASC';
+        $order = 's.starttime ASC, s.duration ASC, s.teacherid';
         $slots = $this->fetch_slots($wherecond, '', $params, '', '', $order);
 
         return $slots;
@@ -803,10 +814,11 @@ class scheduler_instance extends mvc_record_model {
      * Retrieve a list of slots for a certain teacher or group of teachers
      * @param int $teacherid id of teacher to look for, can be 0
      * @param int $groupid find only slots with a teacher in this group, can be 0
-     * @param bool $inpast include only slots in the past?
+     * @param bool|int $timerange include only slots in the future/past?
+     *            Accepted values are: 0=all, 1=future, 2=past, false=all, true=past
      * @return mixed SQL condition and parameters
      */
-    protected function slots_for_teacher_cond($teacherid, $groupid, $inpast) {
+    protected function slots_for_teacher_cond($teacherid, $groupid, $timerange) {
         $wheres = array();
         $params = array();
         if ($teacherid > 0) {
@@ -817,8 +829,11 @@ class scheduler_instance extends mvc_record_model {
             $wheres[] = "EXISTS (SELECT 1 FROM {groups_members} gm WHERE gm.groupid = :gid AND gm.userid = s.teacherid)";
             $params['gid'] = $groupid;
         }
-        if ($inpast) {
+        if ($timerange === true || $timerange == 2) {
             $wheres[] = "s.starttime < ".strtotime('now');
+        }
+        else if ($timerange == 1) {
+            $wheres[] = "s.starttime >= ".strtotime('now');
         }
         $where = implode(" AND ", $wheres);
         return array($where, $params);
@@ -844,11 +859,12 @@ class scheduler_instance extends mvc_record_model {
      * @param int $groupid find only slots with a teacher in this group, can be 0
      * @param mixed $limitfrom start from this entry
      * @param mixed $limitnum max number of entries
+     * @param int $timerange whether to include past/future slots (0=all, 1=future, 0=past)
      * @return scheduler_slot[]
      */
-    public function get_slots_for_teacher($teacherid, $groupid = 0, $limitfrom = '', $limitnum = '') {
-        list($where, $params) = $this->slots_for_teacher_cond($teacherid, $groupid, false);
-        return $this->fetch_slots($where, '', $params, $limitfrom, $limitnum, 's.starttime ASC');
+    public function get_slots_for_teacher($teacherid, $groupid = 0, $limitfrom = '', $limitnum = '', $timerange = 0) {
+        list($where, $params) = $this->slots_for_teacher_cond($teacherid, $groupid, $timerange);
+        return $this->fetch_slots($where, '', $params, $limitfrom, $limitnum, 's.starttime ASC, s.duration ASC, s.teacherid');
     }
 
     /**
@@ -857,11 +873,12 @@ class scheduler_instance extends mvc_record_model {
      * @param int $groupid find only slots with a teacher in this group
      * @param mixed $limitfrom start from this entry
      * @param mixed $limitnum max number of entries
+     * @param int $timerange whether to include past/future slots (0=all, 1=future, 0=past)
      * @return scheduler_slot[]
      */
-    public function get_slots_for_group($groupid, $limitfrom = '', $limitnum = '') {
-        list($where, $params) = $this->slots_for_teacher_cond(0, $groupid, false);
-        return $this->fetch_slots($where, '', $params, $limitfrom, $limitnum, 's.starttime ASC');
+    public function get_slots_for_group($groupid, $limitfrom = '', $limitnum = '', $timerange = 0) {
+        list($where, $params) = $this->slots_for_teacher_cond(0, $groupid, $timerange);
+        return $this->fetch_slots($where, '', $params, $limitfrom, $limitnum, 's.starttime ASC, s.duration ASC, s.teacherid');
     }
 
 
@@ -949,22 +966,18 @@ class scheduler_instance extends mvc_record_model {
     public function get_slot_appointment($appointmentid) {
         global $DB;
 
-        $appointrec = $DB->get_record('scheduler_appointment', array('id' => $appointmentid), '*', MUST_EXIST);
-        $slotrec = $DB->get_record('scheduler_slots', array('id' => $appointrec->slotid), '*', MUST_EXIST);
+        $slotid = $DB->get_field('scheduler_appointment', 'slotid', array('id' => $appointmentid));
+        $slot = $this->get_slot($slotid);
+        $app = $slot->get_appointment($appointmentid);
 
-        $slot = new scheduler_slot($this);
-        $slot->load_record($slotrec);
-        $appointment = new scheduler_appointment($slot);
-        $appointment->load_record($appointrec);
-
-        return array($slot, $appointment);
+        return array($slot, $app);
     }
 
     /**
      * Retrieves all appointments of a student. These will be sorted by start time.
      *
      * @param int $studentid
-     * @return array of scheduler_appointment objects
+     * @return array of appointment objects
      */
     public function get_appointments_for_student($studentid) {
 
@@ -982,10 +995,10 @@ class scheduler_instance extends mvc_record_model {
 
         $appointments = array();
         foreach ($slotrecs as $rec) {
-            $slot = new scheduler_slot($this);
+            $slot = new slot($this);
             $slot->load_record($rec);
             $appointrec = $DB->get_record('scheduler_appointment', array('id' => $rec->appointmentid), '*', MUST_EXIST);
-            $appointment = new scheduler_appointment($slot);
+            $appointment = new appointment($slot);
             $appointment->load_record($appointrec);
             $appointments[] = $appointment;
         }
@@ -1045,7 +1058,7 @@ class scheduler_instance extends mvc_record_model {
     /**
      * Get list of teachers that have slots in this scheduler
      *
-     * @return stdClass[]
+     * @return \stdClass[]
      */
     public function get_teachers() {
         global $DB;
@@ -1063,7 +1076,7 @@ class scheduler_instance extends mvc_record_model {
      * @param string $capability the capabilty to look for
      * @param int|array $groupids - group id or array of group ids; if set, will only return users who are in these groups.
      *                             (for legacy processing, allow also group objects and arrays of these)
-     * @return stdClass[] array of moodle user records
+     * @return \stdClass[] array of moodle user records
      */
     protected function get_available_users($capability, $groupids = 0) {
 
@@ -1106,7 +1119,7 @@ class scheduler_instance extends mvc_record_model {
      * Get list of available students (i.e., users that can book slots)
      *
      * @param mixed $groupids - group id or array of group ids; if set, will only return users who are in these groups.
-     * @return stdClass[] array of moodle user records
+     * @return \stdClass[] array of moodle user records
      */
     public function get_available_students($groupids = 0) {
 
@@ -1117,7 +1130,7 @@ class scheduler_instance extends mvc_record_model {
      * Get list of available teachers (i.e., users that can offer slots)
      *
      * @param mixed $groupids - only return users who are in this group.
-     * @return stdClass array of moodle user records
+     * @return \stdClass array of moodle user records
      */
     public function get_available_teachers($groupids = 0) {
 

@@ -10,6 +10,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use \mod_scheduler\model\scheduler;
+
 // Library of functions and constants for module Scheduler.
 
 require_once($CFG->dirroot.'/mod/scheduler/locallib.php');
@@ -54,6 +56,11 @@ function scheduler_add_instance($data, $mform = null) {
 
     scheduler_grade_item_update($data);
 
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
+        \core_completion\api::update_completion_date_event($data->coursemodule, 'scheduler', $data->id, $completiontimeexpected);
+    }
+
     return $data->id;
 }
 
@@ -83,6 +90,11 @@ function scheduler_update_instance($data, $mform) {
     // Update grade item and grades.
     scheduler_update_grades($data);
 
+    if (class_exists('\core_completion\api')) {
+        $completiontimeexpected = !empty($data->completionexpected) ? $data->completionexpected : null;
+        \core_completion\api::update_completion_date_event($data->coursemodule, 'scheduler', $data->id, $completiontimeexpected);
+    }
+
     return true;
 }
 
@@ -103,7 +115,7 @@ function scheduler_delete_instance($id) {
         return false;
     }
 
-    $scheduler = scheduler_instance::load_by_id($id);
+    $scheduler = scheduler::load_by_id($id);
     $scheduler->delete();
 
     // Clean up any possibly remaining event records.
@@ -128,7 +140,7 @@ function scheduler_delete_instance($id) {
  */
 function scheduler_user_outline($course, $user, $mod, $scheduler) {
 
-    $scheduler = scheduler_instance::load_by_coursemodule_id($mod->id);
+    $scheduler = scheduler::load_by_coursemodule_id($mod->id);
     $upcoming = count($scheduler->get_upcoming_slots_for_student($user->id));
     $attended = count($scheduler->get_attended_slots_for_student($user->id));
 
@@ -164,7 +176,7 @@ function scheduler_user_complete($course, $user, $mod, $scheduler) {
 
     global $PAGE;
 
-    $scheduler = scheduler_instance::load_by_coursemodule_id($mod->id);
+    $scheduler = scheduler::load_by_coursemodule_id($mod->id);
     $output = $PAGE->get_renderer('mod_scheduler', null, RENDERER_TARGET_GENERAL);
 
     $appointments = $scheduler->get_appointments_for_student($user->id);
@@ -305,7 +317,7 @@ function scheduler_reset_userdata($data) {
         $schedulers = $DB->get_records('scheduler', ['course' => $data->courseid]);
 
         foreach ($schedulers as $srec) {
-            $scheduler = scheduler_instance::load_by_id($srec->id);
+            $scheduler = scheduler::load_by_id($srec->id);
 
             if (!empty($data->reset_scheduler_slots) ) {
                 $scheduler->delete_all_slots();
@@ -368,7 +380,7 @@ function scheduler_update_grades($schedulerrecord, $userid=0, $nullifnone=true) 
     global $CFG, $DB;
     require_once($CFG->libdir.'/gradelib.php');
 
-    $scheduler = scheduler_instance::load_by_id($schedulerrecord->id);
+    $scheduler = scheduler::load_by_id($schedulerrecord->id);
 
     if ($scheduler->scale == 0) {
         scheduler_grade_item_update($schedulerrecord);
@@ -525,7 +537,8 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
 
     // Note: 'intro' area is handled in file_browser automatically.
 
-    if (!has_any_capability(array('mod/scheduler:appoint', 'mod/scheduler:attend'), $context)) {
+    if (!has_any_capability(array('mod/scheduler:appoint', 'mod/scheduler:attend',
+                                  'mod/scheduler:viewotherteachersbooking', 'mod/scheduler:manageallappointments'), $context)) {
         return null;
     }
 
@@ -541,7 +554,8 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
     }
 
     try {
-        $scheduler = scheduler_instance::load_by_coursemodule_id($cm->id);
+        $scheduler = scheduler::load_by_coursemodule_id($cm->id);
+        $permissions = new \mod_scheduler\permission\scheduler_permissions($context, $USER->id);
 
         if ($filearea === 'bookinginstructions') {
             $cansee = true;
@@ -550,10 +564,8 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
 
         } else if ($filearea === 'slotnote') {
             $slot = $scheduler->get_slot($itemid);
-
             $cansee = true;
-            $canwrite = $USER->id == $slot->teacherid
-                        || has_capability('mod/scheduler:manageallappointments', $context);
+            $canwrite = $permissions->can_edit_slot($slot);
             $name = get_string('slot', 'scheduler'). ' '.$itemid;
 
         } else if ($filearea === 'appointmentnote') {
@@ -561,10 +573,8 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
                 return null;
             }
             list($slot, $app) = $scheduler->get_slot_appointment($itemid);
-            $cansee = $USER->id == $app->studentid || $USER->id == $slot->teacherid
-                        || has_capability('mod/scheduler:manageallappointments', $context);
-            $canwrite = $USER->id == $slot->teacherid
-                        || has_capability('mod/scheduler:manageallappointments', $context);
+            $cansee = $permissions->can_see_appointment($app);
+            $canwrite = $permissions->can_edit_notes($app);
             $name = get_string('appointment', 'scheduler'). ' '.$itemid;
 
         } else if ($filearea === 'teachernote') {
@@ -573,9 +583,8 @@ function scheduler_get_file_info($browser, $areas, $course, $cm, $context, $file
             }
 
             list($slot, $app) = $scheduler->get_slot_appointment($itemid);
-            $cansee = $USER->id == $slot->teacherid
-                        || has_capability('mod/scheduler:manageallappointments', $context);
-            $canwrite = $cansee;
+            $cansee = $permissions->teacher_can_see_slot($slot);
+            $canwrite = $permissions->can_edit_notes($app);
             $name = get_string('appointment', 'scheduler'). ' '.$itemid;
         }
 
@@ -620,7 +629,8 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
     }
 
     try {
-        $scheduler = scheduler_instance::load_by_coursemodule_id($cm->id);
+        $scheduler = scheduler::load_by_coursemodule_id($cm->id);
+        $permissions = new \mod_scheduler\permission\scheduler_permissions($context, $USER->id);
 
         $entryid = (int)array_shift($args);
         $relativepath = implode('/', $args);
@@ -641,9 +651,7 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
                 return false;
             }
 
-            if (!($USER->id == $app->studentid || $USER->id == $slot->teacherid)) {
-                require_capability('mod/scheduler:manageallappointments', $context);
-            }
+            $permissions->ensure($permissions->can_see_appointment($app));
 
         } else if ($filearea === 'teachernote') {
             if (!$scheduler->uses_teachernotes()) {
@@ -655,9 +663,7 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
                 return false;
             }
 
-            if (!($USER->id == $slot->teacherid)) {
-                require_capability('mod/scheduler:manageallappointments', $context);
-            }
+            $permissions->ensure($permissions->teacher_can_see_slot($slot));
 
         } else if ($filearea === 'bookinginstructions') {
             $caps = array('moodle/course:manageactivities', 'mod/scheduler:appoint');
@@ -675,9 +681,7 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
                 return false;
             }
 
-            if (($USER->id != $slot->teacherid) && ($USER->id != $app->studentid)) {
-                require_capability('mod/scheduler:manageallappointments', $context);
-            }
+            $permissions->ensure($permissions->can_see_appointment($app));
 
         } else {
             // Unknown file area.
@@ -696,5 +700,35 @@ function scheduler_pluginfile($course, $cm, $context, $filearea, $args, $forcedo
     }
 
     send_stored_file($file, 0, 0, $forcedownload, $options);
+}
+
+/**
+ * This function receives a calendar event and returns the action associated with it, or null if there is none.
+ *
+ * This is used by block_myoverview in order to display the event appropriately. If null is returned then the event
+ * is not displayed on the block.
+ *
+ * @param calendar_event $event
+ * @param \core_calendar\action_factory $factory
+ * @return \core_calendar\local\event\entities\action_interface|null
+ */
+function mod_scheduler_core_calendar_provide_event_action(calendar_event $event,
+                                                            \core_calendar\action_factory $factory) {
+    $cm = get_fast_modinfo($event->courseid)->instances['scheduler'][$event->instance];
+
+    $completion = new \completion_info($cm->get_course());
+
+    $completiondata = $completion->get_data($cm, false);
+
+    if ($completiondata->completionstate != COMPLETION_INCOMPLETE) {
+        return null;
+    }
+
+    return $factory->create_instance(
+            get_string('view'),
+            new \moodle_url('/mod/scheduler/view.php', ['id' => $cm->id]),
+            1,
+            true
+    );
 }
 
