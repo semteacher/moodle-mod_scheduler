@@ -1,4 +1,18 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
  * Strings for component 'mod_scheduler', language 'en'
@@ -34,6 +48,9 @@ $string['scheduler:viewfullslots'] = 'See slots even if they are fully booked (i
 $string['scheduler:seeotherstudentsbooking'] = 'See other students booked on the slot';
 $string['scheduler:seeotherstudentsresults'] = 'See other slot student\'s results';
 $string['scheduler:seeoverviewoutsideactivity'] = 'Use the overview screen to see slots outside the current scheduler activity.';
+$string['scheduler:editallattended'] = 'Mark students in all appointments as attended / not attended.';
+$string['scheduler:editallgrades'] = 'Edit grades in all appointments.';
+$string['scheduler:editallnotes'] = 'Edit appointment notes in all appointments.';
 
 /* ***** Events ***** */
 $string['event_bookingformviewed'] = 'Scheduler booking form viewed';
@@ -98,8 +115,6 @@ $string['addstudenttogroup'] = 'Add this student to appointment group';
 $string['allappointments'] = 'All appointments';
 $string['allononepage'] = 'All slots on one page';
 $string['allowgroup'] = 'Exclusive slot - click to change';
-$string['allteachersgrading'] = 'Teachers can grade all appointments';
-$string['allteachersgrading_desc'] = 'When enabled, teachers can grade appointments they are not assigned to.';
 $string['alreadyappointed'] = 'Cannot make the appointment. The slot is already fully booked.';
 $string['appointfor'] = 'Make appointment for';
 $string['appointforgroup'] = 'Make appointments for: {$a}';
