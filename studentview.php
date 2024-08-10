@@ -63,9 +63,6 @@ require_once($CFG->dirroot.'/mod/scheduler/studentview.controller.php');
 
 echo $output->header();
 
-// Print intro.
-echo $output->mod_intro($scheduler);
-
 
 $showowngrades = $scheduler->uses_grades();
 // Print total grade (if any).
@@ -81,9 +78,8 @@ if ($showowngrades) {
             $grademsg = html_writer::tag('p',
                             get_string('overriddennotice', 'grades'),  array('class' => 'overriddennotice')
                         );
-        } else {
-            $grademsg = get_string('yourtotalgrade', 'scheduler', $output->format_grade($scheduler, $totalgrade));
         }
+        $grademsg .= get_string('yourtotalgrade', 'scheduler', $gradebookinfo->str_grade);
         echo html_writer::div($grademsg, 'totalgrade');
     }
 }
