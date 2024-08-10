@@ -243,7 +243,7 @@ if ($action == 'addaperiodsession') {
     $actionurl = new moodle_url($baseurl, array('what' => 'addaperiodsession'));
 
     if (!$scheduler->has_available_teachers()) {
-        print_error('needteachers', 'scheduler', viewurl);
+		throw new moodle_exception('needteachers', 'scheduler', $viewurl);
     }
 
     $mform = new scheduler_addaperiodsession_form($actionurl, $scheduler, $cm, $groupsicansee);
