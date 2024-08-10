@@ -137,9 +137,10 @@ class mod_scheduler_renderer extends plugin_renderer_base {
      * @param string $grade the grade to be displayed
      * @param bool $short formats the grade in short form (result empty if grading is
      * not used, or no grade is available; parantheses are put around the grade if it is present)
+     * @param int $decimals number of decimals to use for formatting/rounding, 0 by default
      * @return string the formatted grade
      */
-    public function format_grade($subject, $grade, $short = false) {
+    public function format_grade($subject, $grade, $short = false, $decimals = 0) {
         if ($subject instanceof scheduler) {
             $scaleid = $subject->scale;
         } else {
@@ -153,15 +154,16 @@ class mod_scheduler_renderer extends plugin_renderer_base {
                 $result = get_string('nograde');
             }
         } else {
-            $grade = (int) $grade;
             if ($scaleid > 0) {
                 // Numeric grade.
+                $grade = round($grade, $decimals);
                 $result .= $grade;
                 if (strlen($grade) > 0) {
                     $result .= '/' . $scaleid;
                 }
             } else {
                 // Grade on scale.
+                $grade = round($grade);
                 if ($grade > 0) {
                     $levels = $this->get_scale_levels(-$scaleid);
                     if (array_key_exists($grade, $levels)) {
@@ -318,23 +320,6 @@ class mod_scheduler_renderer extends plugin_renderer_base {
         return $o;
     }
 
-
-    /**
-     * Render the module introduction of a scheduler.
-     *
-     * @param scheduler $scheduler the scheduler in question
-     * @return string rendered module info
-     */
-    public function mod_intro($scheduler) {
-        $o = $this->heading(format_string($scheduler->name), 2);
-
-        if (trim(strip_tags($scheduler->intro))) {
-            $o .= $this->box_start('mod_introbox');
-            $o .= format_module_intro('scheduler', $scheduler->get_data(), $scheduler->cmid);
-            $o .= $this->box_end();
-        }
-        return $o;
-    }
 
     /**
      * Construct a tab header in the teacher view.
@@ -536,9 +521,7 @@ class mod_scheduler_renderer extends plugin_renderer_base {
         $toggleid = html_writer::random_id('toggle');
 
         if ($studentlist->expandable && count($studentlist->students) > 0) {
-            $this->page->requires->yui_module('moodle-mod_scheduler-studentlist',
-                            'M.mod_scheduler.studentlist.init',
-                            array($toggleid, (boolean) $studentlist->expanded) );
+            $this->page->requires->js_call_amd('mod_scheduler/studentlist', 'init', [$toggleid, (boolean) $studentlist->expanded]);
             $imgclass = 'studentlist-togglebutton';
             $alttext = get_string('showparticipants', 'scheduler');
             $o .= $this->output->pix_icon('t/switch', $alttext, 'moodle',
@@ -696,6 +679,29 @@ class mod_scheduler_renderer extends plugin_renderer_base {
     }
 
     /**
+     * Renders an action menu component. Enhanced to allow confirmation dialogues in action menu items.
+     *
+     * @param action_menu $menu
+     * @return string HTML
+     */
+    public function render_action_menu(action_menu $menu) {
+
+        // We don't want the class icon there!
+        foreach ($menu->get_secondary_actions() as $action) {
+            if ($action instanceof \action_menu_link && $action->has_class('icon')) {
+                $action->attributes['class'] = preg_replace('/(^|\s+)icon(\s+|$)/i', '', $action->attributes['class']);
+            }
+        }
+
+        if ($menu->is_empty()) {
+            return '';
+        }
+        $context = $menu->export_for_template($this);
+
+        return $this->render_from_template('mod_scheduler/action_menu', $context);
+    }
+
+    /**
      * Render a command bar.
      *
      * @param scheduler_command_bar $commandbar
@@ -725,8 +731,7 @@ class mod_scheduler_renderer extends plugin_renderer_base {
      */
     public function render_scheduler_slot_manager(scheduler_slot_manager $slotman) {
 
-        $this->page->requires->yui_module('moodle-mod_scheduler-saveseen',
-                        'M.mod_scheduler.saveseen.init', array($slotman->scheduler->cmid) );
+        $this->page->requires->js_call_amd('mod_scheduler/saveseen', 'init', [$slotman->scheduler->cmid] );
 
         $o = '';
 
@@ -903,11 +908,11 @@ class mod_scheduler_renderer extends plugin_renderer_base {
 
         if ($gradeinfo->showtotalgrade) {
             $items[] = array('gradingstrategy', $this->format_grading_strategy($gradeinfo->scheduler->gradingstrategy));
-            $items[] = array('totalgrade', $this->format_grade($gradeinfo->scheduler, $gradeinfo->totalgrade));
+            $items[] = array('totalgrade', $this->format_grade($gradeinfo->scheduler, $gradeinfo->totalgrade, false, 2));
         }
 
         if (!is_null($gradeinfo->gbgrade)) {
-            $gbgradeinfo = $this->format_grade($gradeinfo->scheduler, $gradeinfo->gbgrade->grade);
+            $gbgradestr = $gradeinfo->gbgrade->str_grade;
             $attributes = array();
             if ($gradeinfo->gbgrade->hidden) {
                 $attributes[] = get_string('hidden', 'grades');
@@ -919,9 +924,9 @@ class mod_scheduler_renderer extends plugin_renderer_base {
                 $attributes[] = get_string('overridden', 'grades');
             }
             if (count($attributes) > 0) {
-                $gbgradeinfo .= ' ('.implode(', ', $attributes) .')';
+                $gbgradestr .= ' ('.implode(', ', $attributes) .')';
             }
-            $items[] = array('gradeingradebook', $gbgradeinfo);
+            $items[] = array('gradeingradebook', $gbgradestr);
         }
 
         $o = html_writer::start_div('totalgrade');
@@ -1060,7 +1065,7 @@ class mod_scheduler_renderer extends plugin_renderer_base {
         if ($ai->showresult) {
             if ($ai->scheduler->uses_appointmentnotes() && $ai->appointment->appointmentnote) {
                 $row = new html_table_row();
-                $cell1 = new html_table_cell(get_string('appointmentnotes', 'scheduler'));
+                $cell1 = new html_table_cell(get_string('appointmentnote', 'scheduler'));
                 $note = $this->format_notes($ai->appointment->appointmentnote, $ai->appointment->appointmentnoteformat,
                                             $ai->scheduler->get_context(), 'appointmentnote', $ai->appointment->id);
                 $cell2 = new html_table_cell($note);
